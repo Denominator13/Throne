@@ -5,6 +5,7 @@ using Throne.World.Network;
 using Throne.World.Network.Messages;
 using Throne.World.Records;
 using Throne.World.Scripting.Scripts;
+using Throne.World.Structures.Storage;
 
 namespace Throne.World.Structures.Objects
 {
@@ -18,7 +19,7 @@ namespace Throne.World.Structures.Objects
             Record = record;
         }
 
-        #region Scripting 
+        #region Scripting
 
         //TODO: Move this to the item information class when implemented.
 
@@ -63,6 +64,25 @@ namespace Throne.World.Structures.Objects
             {
                 Record.Position = value;
                 Record.Update();
+            }
+        }
+
+        public DepositoryType DepositoryType
+        {
+            get { return Record.DepositoryType; }
+            set
+            {
+                Record.DepositoryType = value;
+                Record.Update();
+            }
+        }
+
+        public DepositoryId DepositoryId
+        {
+            get { return Record.DepositoryId; }
+            set
+            {
+                Record.DepositoryId = value;
             }
         }
 

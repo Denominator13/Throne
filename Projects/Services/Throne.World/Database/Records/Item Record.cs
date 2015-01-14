@@ -9,7 +9,8 @@ namespace Throne.World.Records
     public class ItemRecord : WorldDatabaseRecord
     {
         public virtual UInt32 Guid { get; set; }
-        public virtual DepositoryType Depository { get; set; }
+        public virtual DepositoryType DepositoryType { get; set; }
+        public virtual DepositoryId DepositoryId { get; set; }
         public virtual Int32 Type { get; set; }
         public virtual Item.Positions Position { get; set; }
         public virtual Byte CraftLevel { get; set; }
@@ -21,6 +22,13 @@ namespace Throne.World.Records
         public override void Create()
         {
             WorldServer.Instance.WorldDbContext.Commit(this);
+        }
+
+        public override void Delete()
+        {
+            if (Owner)
+                Owner.ItemPayload.Remove(this);
+            base.Delete();
         }
     }
 
@@ -38,7 +46,8 @@ namespace Throne.World.Records
             Map(r => r.CraftProgress);
             Map(r => r.FirstSlot);
             Map(r => r.SecondSlot);
-            Map(r => r.Depository);
+            Map(r => r.DepositoryType);
+            Map(r => r.DepositoryId);
         }
     }
 }

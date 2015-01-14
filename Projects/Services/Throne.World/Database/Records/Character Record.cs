@@ -83,11 +83,15 @@ namespace Throne.World.Records
 
             References(x => x.Spouse).Nullable();
 
-            HasMany(r => r.ItemPayload).Not.LazyLoad().KeyColumn("OwnerId")
-                .Inverse();
+            HasMany(r => r.ItemPayload)
+                .KeyColumn("OwnerId")
+                .Inverse()
+                .Not.LazyLoad();
 
-            HasMany(r => r.MailPayload).Not.LazyLoad().KeyColumn("recipientId")
-                .Inverse();
+            HasMany(r => r.MailPayload)
+                .KeyColumn("RecipientId")
+                .Inverse()
+                .Not.LazyLoad();
         }
     }
 }

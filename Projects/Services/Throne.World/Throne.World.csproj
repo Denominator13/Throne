@@ -182,10 +182,11 @@
     <Compile Include="Commands\Database\DropDatabaseCommand.cs" />
     <Compile Include="Commands\Database\ExportSchemaCommand.cs" />
     <Compile Include="Commands\Scripting\RefreshScriptsCommand.cs" />
-    <Compile Include="Commands\User\Items\CreateItemCommand.cs" />
-    <Compile Include="Commands\User\Character States and Titles\CharacterStateCommand.cs" />
-    <Compile Include="Commands\User\Items\SendGearCommand.cs" />
-    <Compile Include="Commands\User\Travel\TeleportCommand.cs" />
+    <Compile Include="Commands\User\CreateItemCommand.cs" />
+    <Compile Include="Commands\User\CharacterStateCommand.cs" />
+    <Compile Include="Commands\User\OpenWindowCommand.cs" />
+    <Compile Include="Commands\User\SendGearCommand.cs" />
+    <Compile Include="Commands\User\TeleportCommand.cs" />
     <Compile Include="Commands\User\UserCommand.cs" />
     <Compile Include="Commands\World\MapAttributeCommand.cs" />
     <Compile Include="Commands\World\MapInfoCommand.cs" />
@@ -208,19 +209,24 @@
     <Compile Include="Network\Messages\[10010] General Action\GeneralAction.ConfirmLocation.cs" />
     <Compile Include="Network\Messages\[10010] General Action\GeneralAction.GetWarp.cs" />
     <Compile Include="Network\Messages\[10010] General Action\GeneralAction.Away.cs" />
+    <Compile Include="Network\Messages\[10010] General Action\GeneralAction.OpenWindow.cs" />
     <Compile Include="Network\Messages\[10010] General Action\GeneralAction.RoleQuery.cs" />
     <Compile Include="Network\Messages\[10010] General Action\GeneralAction.SetAppearance.cs" />
     <Compile Include="Network\Messages\[10010] General Action\GeneralAction.Teleport.cs" />
     <Compile Include="Network\Messages\[1008] Item Information.cs" />
     <Compile Include="Network\Messages\[1009] Item Action\ItemAction.Drop.cs" />
     <Compile Include="Network\Messages\[1009] Item Action\ItemAction.Equip.cs" />
+    <Compile Include="Network\Messages\[1009] Item Action\ItemAction.QueryDepoFunds.cs" />
     <Compile Include="Network\Messages\[1009] Item Action\ItemAction.Remove.cs" />
     <Compile Include="Network\Messages\[1009] Item Action\ItemAction.SendGear.cs" />
     <Compile Include="Network\Messages\[1009] Item Action\ItemAction.Unequip.cs" />
     <Compile Include="Network\Messages\[1009] Item Action\ItemAction.Use.cs" />
     <Compile Include="Network\Messages\[1016] Weather.cs" />
     <Compile Include="Network\Messages\[1032] Battle Effectiveness.cs" />
+    <Compile Include="Network\Messages\[1043] Item Roll.cs" />
     <Compile Include="Network\Messages\[1101] Map Item Info.cs" />
+    <Compile Include="Network\Messages\[1102] Depository.cs" />
+    <Compile Include="Network\Messages\[1129] VIP Valid Functions.cs" />
     <Compile Include="Network\Messages\[2030] NPC Information.cs" />
     <Compile Include="Network\Messages\[2031] NPC Action.cs" />
     <Compile Include="Network\Messages\[2032] Task Dialog.cs" />
@@ -282,7 +288,12 @@
     <Compile Include="Sessions\NpcSession.cs" />
     <Compile Include="Structures\Mail\Inbox.cs" />
     <Compile Include="Structures\Mail\Mail.cs" />
+    <Compile Include="Structures\Mail\Writer.cs" />
+    <Compile Include="Structures\Objects\Item\Item.Attributes.cs" />
     <Compile Include="Structures\Objects\Role.Enumerators.cs" />
+    <Compile Include="Structures\Storage\Item Storage Implementations\Depository.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Structures\Task Dialog\Dialog.cs" />
     <Compile Include="Structures\Task Dialog\DialogFeedback.cs" />
     <Compile Include="Structures\Task Dialog\DialogInput.cs" />
@@ -299,7 +310,6 @@
     <Compile Include="Structures\Objects\Player Character\Character.Assets.cs" />
     <Compile Include="Structures\Storage\Item Storage Implementations\Inventory.cs" />
     <Compile Include="Structures\Storage\Item Storage.cs" />
-    <Compile Include="Structures\Storage\Item Storage Implementations\Depository.cs" />
     <Compile Include="Structures\Objects\Player Character\Character.Threading.cs" />
     <Compile Include="Structures\Objects\WorldObject.cs" />
     <Compile Include="Structures\Objects\IWorldObject.cs" />

@@ -149,7 +149,7 @@ namespace Throne.Framework.Persistence
         /// <param name="item">The entity to add.</param>
         public void Commit(object item)
         {
-            using (var session = CreateSession())
+            using (ISession session = CreateSession())
             {
                 using (session.BeginTransaction())
                 {

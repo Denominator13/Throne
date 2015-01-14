@@ -7,7 +7,7 @@ using Throne.World.Structures.Objects;
 /// </summary>
 public sealed class ScentSword : ItemScript
 {
-    public override void Load()
+    protected override void Load()
     {
         //Hooked item IDs must be unique.
         //An error will be thrown if another loaded

@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\..\Build\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -223,7 +223,9 @@
     <Compile Include="Persistence\Conventions\Relationships\ReferenceConvention.cs" />
     <Compile Include="Persistence\Conventions\Relationships\RelationshipCascadeConvention.cs" />
     <Compile Include="Persistence\Conventions\Relationships\RelationshipFetchConvention.cs" />
-    <Compile Include="Persistence\Conventions\Relationships\RelationshipLazyLoadConvention.cs" />
+    <Compile Include="Persistence\Conventions\Relationships\RelationshipLazyLoadConvention.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Persistence\GameDatabaseContext.cs" />
     <Compile Include="Properties\StrRes1.Designer.cs">
       <DependentUpon>StrRes.resx</DependentUpon>

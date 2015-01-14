@@ -1,5 +1,4 @@
 ﻿using System;
-using Throne.Framework;
 using Throne.Framework.Network.Connectivity;
 using Throne.Framework.Network.Transmission;
 using Throne.World.Network.Handling;
@@ -12,27 +11,46 @@ namespace Throne.World.Network.Messages
     [WorldPacketHandler(PacketTypes.NpcAction)]
     public sealed class NpcAction : WorldPacket
     {
+        public enum Action
+        {
+            Initiate,
+            Add,
+            Removal,
+            Delete,
+            ChangePosition,
+            PlaceStatue
+        }
+
         public NpcAction(Byte[] array)
             : base(array)
         {
-            SeekForward(sizeof(int)); //incoming timestamp
+            SeekForward(sizeof (int)); //incoming timestamp
         }
 
         public override bool Read(IClient client)
         {
-            Character chr = ((WorldClient)client).Character;
+            Character chr = ((WorldClient) client).Character;
             uint id = ReadUInt();
             short unknown1 = ReadShort();
             byte option = ReadByte();
-            ushort interactionType = ReadUShort();
+            var interactionType = (Action) ReadUShort();
             string inputReturn = ReadString();
 
 
             Npc npc;
-            if (!(npc = chr.Location.Map.GetNpc(id)))//todo: change to what is visible
+            if (!(npc = chr.Location.Map.GetNpc(id))) //todo: change to what is visible
                 throw new ModerateViolation("Player attempted to select an invalid NPC.");
 
-            chr.NpcSession.Start(npc, chr);
+            switch (interactionType)
+            {
+                case Action.Initiate:
+                    chr.NpcSession.Start(npc, chr);
+                    break;
+
+                default:
+                    client.Respond("This NPC action ({0}) has not yet been implemented.");
+                    break;
+            }
             return false;
         }
     }

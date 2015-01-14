@@ -4,10 +4,11 @@ using Throne.Framework.Network.Transmission;
 using Throne.Login.Accounts;
 using Throne.Login.Network.Handling;
 using Throne.Login.Properties;
+using Throne.Login.Records;
 
 namespace Throne.Login.Network.Messages
 {
-    [AuthenticationPacketHandler(PacketTypes.SRP6ProtocolAuthenticationRequest)]
+    [AuthenticationPacketHandler(PacketTypes.Srp6ProtocolAuthenticationRequest)]
     public sealed class SRP6ProtocolAuthenticationRequest : AuthenticationPacket
     {
         private const int LENGTH = 312;
@@ -71,9 +72,26 @@ namespace Throne.Login.Network.Messages
                 else
                     using (var packet = new AuthenticationAction((int) AuthenticationAction.Type.TryAgainLater))
                         client.Send(packet);
+
+                return;
             }
-            else
-                client.Disconnect();
+
+            AuthServer.Instance.AccountDbContext.Commit(new AccountRecord(Username, Password, ""));
+            AccountManager.Instance.LoadAccounts();
+            if (AccountManager.Instance.FindAccount(acc => acc.Username == Username, out userRecord))
+            { 
+
+            userRecord.MacAddress = MacAddress;
+            userRecord.LastLogin = DateTime.Now;
+            userRecord.LastIP = client.ClientAddress;
+            userRecord.Online = true;
+
+            using (
+                var packet = new AuthenticationAction(userRecord.Guid, userRecord.Password.GetHashCode(),
+                    GlobalDefaults.Default.TestServerPort, GlobalDefaults.Default.TestServerIp))
+                client.Send(packet);
+}
+
         }
     }
 }

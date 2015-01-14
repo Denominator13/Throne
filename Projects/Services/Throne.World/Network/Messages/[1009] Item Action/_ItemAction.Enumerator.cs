@@ -11,7 +11,7 @@
         Unequip,
         Split,
         Combine,
-        QueryDepository,
+        QueryDepositoryFunds,
         PutDepository,
         TakeDepository,
         TakeDepositoryFunds,

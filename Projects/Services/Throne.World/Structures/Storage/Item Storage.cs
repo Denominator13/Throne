@@ -8,6 +8,12 @@ namespace Throne.World.Structures.Storage
     public abstract class ItemStorage
     {
         private Object _syncRoot;
+        public readonly Int32 Size;
+
+        public ItemStorage(Int32 size)
+        {
+            Size = size;
+        }
 
         public Object SyncRoot
         {
@@ -16,6 +22,11 @@ namespace Throne.World.Structures.Storage
                 if (_syncRoot == null) Interlocked.CompareExchange<Object>(ref _syncRoot, new Object(), null);
                 return _syncRoot;
             }
+        }
+
+        public Boolean AdequateSpace(Int32 forCount = 1)
+        {
+            return Count + forCount <= Size;
         }
 
         public abstract IEnumerable<Item> Items { get; }

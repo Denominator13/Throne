@@ -1,9 +1,10 @@
 ﻿namespace Throne.World.Network.Messages
 {
-    public partial class GeneralAction
+    public partial class ItemAction
     {
-        public void SendGuild()
+        private void SendDepoFund()
         {
+            Argument = 1337;
             Character.User.Send(this);
         }
     }

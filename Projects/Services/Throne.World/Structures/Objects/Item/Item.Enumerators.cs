@@ -2,19 +2,6 @@
 {
     partial class Item
     {
-        public enum Mode : byte
-        {
-            None = 0,
-            AddOrMove = 1,
-            Trade = 2,
-            Update = 3,
-            View = 4,
-            Confiscated = 8,
-            Link = 9,
-            Mail = 11,
-            Auction = 12
-        }
-
         public enum Color : byte
         {
             Black = 2,

@@ -46,10 +46,12 @@ namespace Throne.World.Structures.Objects
             _look = new Model(Record.Look);
             _pStats = new BooleanArray<RoleState>(192);
 
-            IEnumerable<Item> items = Record.ItemPayload.Select(itemRecord => new Item(itemRecord));
+            var items = Record.ItemPayload.Select(itemRecord => new Item(itemRecord)).ToList();
             {
-                _gear = new Gear(items);
-                _inventory = new Inventory(items);
+                ConstructItemDepositories(ref items);
+
+                _gear = new Gear(ref items);
+                _inventory = new Inventory(ref items);
             }
 
             Inbox = new Inbox(Record.MailPayload.Select(mailRecord => new Mail.Mail(mailRecord)));
@@ -96,7 +98,8 @@ namespace Throne.World.Structures.Objects
             }
 
             User.SendArrays(
-                new CharacterInformation(this)
+                new CharacterInformation(this),
+                new VIPValidFunctions()
                 //mentor
                 //goodwill ranks
                 //guild
@@ -123,8 +126,6 @@ namespace Throne.World.Structures.Objects
         {
             User.Disconnect();
         }
-
-
         public override string ToString()
         {
             return Name;

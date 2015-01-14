@@ -79,6 +79,9 @@ namespace Throne.World.Network.Messages
                 case ItemActionType.Unequip:
                     UnequipRequest();
                     break;
+                case ItemActionType.QueryDepositoryFunds:
+                    SendDepoFund();
+                    break;
             }
         }
 

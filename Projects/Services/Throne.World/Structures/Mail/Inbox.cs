@@ -6,13 +6,13 @@ namespace Throne.World.Structures.Mail
 {
     public class Inbox : Dictionary<UInt32, Mail>
     {
-        private readonly UInt32 _mailId;
-
         public Inbox(IEnumerable<Mail> payload)
         {
             foreach (Mail mail in payload)
-                Add(mail.ID, mail);
+                Add(mail.Id, mail);
         }
+
+        public Boolean NeedsRefresh { get; set; }
 
         public Boolean UnreadMail
         {
@@ -28,7 +28,5 @@ namespace Throne.World.Structures.Mail
         {
             return Values.OrderByDescending(m => m.Creation);
         }
-
-
     }
 }

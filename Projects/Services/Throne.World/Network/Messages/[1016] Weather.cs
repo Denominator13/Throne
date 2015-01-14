@@ -24,12 +24,12 @@ namespace Throne.World.Network.Messages
         }
 
         public WeatherInformation(WeatherType type, Int32 direction, Int32 intensity, Color color)
-            : base(PacketTypes.WeatherInformation, 28)
+            : base(PacketTypes.WeatherInformation, 76)
         {
-            WriteUInt((UInt32)type);
-            WriteInt(intensity);
-            WriteInt(direction);
-            WriteInt(color.ToArgb());
+            WriteUInt((UInt32)type); // 1, snow 3
+            WriteInt(intensity); // , 250
+            WriteInt(direction); // 14, 30
+            WriteInt(color.ToArgb()); // , 1
         }
     }
 }

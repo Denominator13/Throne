@@ -62,7 +62,7 @@ namespace Throne.Framework.Threading.Actors
             try
             {
                 //limit execution time to 5 seconds.
-                return eventHandle.WaitAsync(5000);
+                return eventHandle.WaitAsync(10000);
             }
             finally
             {

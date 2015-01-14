@@ -5,7 +5,24 @@ namespace Throne.World.Network.Messages
 {
     public sealed class ItemInformation : WorldPacket
     {
-        public ItemInformation(Item item, Item.Mode mode = Item.Mode.AddOrMove)
+        public enum Mode : byte
+        {
+            None = 0,
+            AddOrMove = 1,
+            Trade = 2,
+            Update = 3,
+            InspectionItem = 4,
+            Uk5 = 5,
+            Uk6 = 6,
+            Uk7 = 7,
+            Confiscated = 8,
+            Link = 9,
+            Roll = 10,
+            Mail = 11,
+            Auction = 12
+        }
+
+        public ItemInformation(Item item, Mode mode = Mode.AddOrMove)
             : base(PacketTypes.ItemInformation, 72 + 8)
         {
             lock (item)
@@ -14,14 +31,14 @@ namespace Throne.World.Network.Messages
                 WriteInt(item.Type);
                 WriteShort(100); // durability
                 WriteShort(100); // max durability
-                WriteShort((short)mode);
+                WriteShort((short) mode);
                 WriteShort((short) item.Position); // position
                 WriteInt(0); // socket progress, offset also used for steed rgb
                 WriteByte(item.FirstSlot);
                 WriteByte(item.SecondSlot);
-                SeekForward(2 * sizeof(byte)); // idk
+                SeekForward(2*sizeof (byte)); // idk
                 WriteInt(0); // item effect (poison, hp, mana, shield)
-                SeekForward(sizeof(byte)); // idk
+                SeekForward(sizeof (byte)); // idk
                 WriteByte(item.CraftLevel);
                 WriteByte(0); // bless, next red value for steed
                 WriteBoolean(false); // bound

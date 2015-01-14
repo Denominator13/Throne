@@ -116,7 +116,7 @@ namespace Throne.Framework
         }
 
         /// <summary>
-        ///     Searchs for characters within a string.
+        ///     Searches for characters within a string.
         /// </summary>
         /// <param name="str">The string to search.</param>
         /// <param name="chars">The characters to find.</param>
@@ -125,6 +125,14 @@ namespace Throne.Framework
         public static bool Contains(this string str, string chars, StringComparison rule)
         {
             return str.IndexOf(chars, rule) > -1;
+        }
+
+        public static string Truncate(this string value, int maxLength)
+        {
+            if (!string.IsNullOrEmpty(value) && value.Length > maxLength)
+                return value.Substring(0, maxLength);
+
+            return value;
         }
 
         /// <summary>
@@ -177,7 +185,6 @@ namespace Throne.Framework
         /// <returns>The original sequence passed to this method.</returns>
         public static IEnumerable<T> Force<T>(this IEnumerable<T> source)
         {
-
             IEnumerator<T> enumer = source.GetEnumerator();
 
             while (enumer.MoveNext()) ;

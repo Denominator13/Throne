@@ -1,22 +1,23 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
+using Throne.Framework;
+using Throne.Framework.Network.Transmission.Stream;
+using Throne.World.Network.Messages;
 using Throne.World.Structures.Objects;
 
 namespace Throne.World.Structures.Storage
 {
-    public class Depository : ItemStorage
+    public class ItemDepository : ItemStorage
     {
-        public readonly DepositoryType Type;
         private readonly ConcurrentDictionary<UInt32, Item> _items;
-        private readonly Int32 _size;
 
 
-        public Depository(DepositoryType location, Int32 size)
+        public ItemDepository(Int32 size)
+            : base(size)
         {
             _items = new ConcurrentDictionary<uint, Item>();
-            _size = size;
-            Type = location;
         }
 
         public override IEnumerable<Item> Items
@@ -31,35 +32,62 @@ namespace Throne.World.Structures.Storage
 
         public override Boolean Add(Item item)
         {
-            return _items.Count < _size && _items.TryAdd(item.ID, item);
+            lock (SyncRoot)
+                return _items.Count < Size && _items.TryAdd(item.ID, item);
         }
 
         public override Item Remove(UInt32 guid)
         {
             Item ret;
-            _items.TryRemove(guid, out ret);
+            lock (SyncRoot)
+                _items.TryRemove(guid, out ret);
             return ret;
         }
 
         /// <summary>
-        ///     Creates a network message for the client from the depository information.
+        ///     Creates a server message contain depository information for the client.
+        ///     May contain multiple packets in one array for depositories with large capacity.
         /// </summary>
-        /// <param name="toSend"></param>
-        /// <returns>Byte array that represents a complete depository packet.</returns>
-        public static implicit operator Byte[](Depository toSend)
+        public Byte[] DepositoryInformationArray(DepositoryType type, DepositoryId id)
         {
-            throw new NotImplementedException();
+            //todo: need to send refinements and artifacts.
+
+            lock (SyncRoot)
+                if (Count > 17)
+                {
+                    var stream = new Stream();
+                    for (int joined = 0; joined < Count;)
+                        Items.Skip(joined).Take(17).ToArray().With(
+                            items =>
+                            {
+                                stream.Join(new Depository(type, id, Depository.DepositoryAction.Initiate, Size,
+                                    items));
+                                joined += items.Length;
+                            });
+                    return stream;
+                }
+                else
+                    return new Depository(type, id, Depository.DepositoryAction.Initiate, Size, Items.ToArray());
         }
     }
 
     public enum DepositoryType : byte
     {
         None,
-        TwinCity,
-        PhoenixCastle,
-        DesertCity,
-        BirdIsland,
-        AncientCity,
-        Marketplace
+        Warehouse,
+        Chest,
+        Sash
+    }
+
+    public enum DepositoryId : uint
+    {
+        None,
+        TwinCity = 8,
+        PhoenixCity = 10012,
+        ApeCity = 10028,
+        DesertCity = 10011,
+        BirdCity = 10027,
+        StoneCity = 4101,
+        Market = 44
     }
 }

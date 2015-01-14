@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using NHibernate.Mapping;
 using Throne.Framework;
 using Throne.Framework.Logging;
 using Throne.Framework.Threading;
@@ -17,12 +18,19 @@ namespace Throne.Login.Accounts
 
         private AccountManager()
         {
+            LoadAccounts(setOffline: true);
+        }
+
+        public void LoadAccounts(Boolean setOffline = false)
+        {
             _log.Info("Loading accounts...");
+            _accounts.Clear();
 
             IEnumerable<AccountRecord> accounts = AuthServer.Instance.AccountDbContext.FindAll<AccountRecord>();
             foreach (Account acc in accounts.Select(account => new Account(account)))
             {
-                acc.Online = false;
+                if (setOffline)
+                    acc.Online = false;
                 AddAccount(acc);
             }
 

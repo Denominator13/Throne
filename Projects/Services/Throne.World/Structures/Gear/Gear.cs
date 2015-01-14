@@ -10,15 +10,18 @@ namespace Throne.World.Structures
     {
         private Object _syncRoot;
 
-        public Gear(IEnumerable<Item> payload)
+        public Gear(ref List<Item> payload)
         {
             lock (SyncRoot)
                 foreach (
-                    Item.Positions pos in
+                    var pos in
                         Enum.GetValues(typeof (Item.Positions))
                             .Cast<Item.Positions>()
-                            .Where(pos => pos != Item.Positions.Inventory))
+                            .Where(pos => pos >= Item.Positions.Headgear && pos <= Item.Positions.AlternateGarment))
                     Add(pos, new GearSlot(pos, payload.SingleOrDefault(plItem => plItem.Position == pos)));
+
+            payload.RemoveAll(
+                item => item.Position >= Item.Positions.Headgear && item.Position <= Item.Positions.AlternateGarment);
         }
 
         public Object SyncRoot

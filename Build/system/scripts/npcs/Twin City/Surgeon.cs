@@ -3,7 +3,7 @@ using Throne.World.Structures.Travel;
 
 public sealed class Surgeon : NpcScript
 {
-    public override void Load()
+    protected override void Load()
     {
         SetDisplayName("Surgeon");
         SetFace(360);

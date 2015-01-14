@@ -6,7 +6,7 @@ using Throne.World.Structures.Travel;
 
 public sealed class GuildDirector : NpcScript
 {
-    public override void Load()
+    protected override void Load()
     {
         SetFace(88);
         SetMesh(15);

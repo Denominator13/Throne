@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Throne.Framework;
 using Throne.Framework.Network.Transmission.Stream;
 using Throne.World.Network.Messages;
@@ -28,6 +30,11 @@ namespace Throne.World.Structures.Objects
             if (itm.Position > Item.Positions.Inventory)
                 UnequipGearSlot(GetGearSlot(itm.Position));
             return MoveFromInventory(itm.ID);
+        }
+
+        public Item GetItem(UInt32 guid)
+        {
+            return GetInventoryItem(guid) ?? GetGearItem(guid);
         }
 
         #region Currency
@@ -80,7 +87,7 @@ namespace Throne.World.Structures.Objects
             return item;
         }
 
-        public Boolean AdequateInventorySpace(Int32 forCount)
+        public Boolean AdequateInventorySpace(Int32 forCount = 1)
         {
             if (_inventory.AdequateSpace(forCount))
                 return true;
@@ -110,6 +117,12 @@ namespace Throne.World.Structures.Objects
         public UInt32 GetGearGuid(Item.Positions pos)
         {
             return GetGearSlot(pos).ContainedGuid;
+        }
+
+        public Item GetGearItem(UInt32 guid)
+        {
+            GearSlot containingSlot = _gear.Values.SingleOrDefault(slot => slot.ContainedGuid == guid);
+            return containingSlot != null ? containingSlot.Item : null;
         }
 
         public void EquipGearSlot(Item item, Item.Positions pos)
@@ -165,5 +178,70 @@ namespace Throne.World.Structures.Objects
         }
 
         #endregion Gear
+
+        #region Depositories
+
+        public Dictionary<DepositoryType, Dictionary<DepositoryId, ItemDepository>> Depositories;
+
+        private void ConstructItemDepositories(ref List<Item> payload)
+        {
+            Depositories = new Dictionary<DepositoryType, Dictionary<DepositoryId, ItemDepository>>();
+
+            Depositories[DepositoryType.Sash] = new Dictionary<DepositoryId, ItemDepository>();
+            Depositories[DepositoryType.Warehouse] = new Dictionary<DepositoryId, ItemDepository>();
+            Depositories[DepositoryType.Chest] = new Dictionary<DepositoryId, ItemDepository>();
+
+            foreach (DepositoryId warehouse in
+                Enum.GetValues(typeof (DepositoryId))
+                    .Cast<DepositoryId>()
+                    .Where(wareId => wareId != DepositoryId.None))
+                Depositories[DepositoryType.Warehouse].Add(warehouse, new ItemDepository(100));
+
+            foreach (Item sash in payload.Where(item => item.StorageSize > 0))
+                Depositories[DepositoryType.Sash].Add((DepositoryId) sash.ID, new ItemDepository(sash.StorageSize));
+
+            foreach (Item item in payload.Where(item => item.DepositoryType != DepositoryType.None))
+                Depositories[item.DepositoryType][item.DepositoryId].Add(item);
+
+            payload.RemoveAll(
+                remove => remove.DepositoryType != DepositoryType.None);
+        }
+
+        public void MoveToDepository(DepositoryType type, DepositoryId id, Item item)
+        {
+            ItemDepository depo;
+            if (!Depositories[type].TryGetValue(id, out depo)) return;
+
+            lock (depo.SyncRoot)
+            {
+                if (!depo.AdequateSpace()) return;
+                if (item.Position > Item.Positions.Inventory)
+                    UnequipGearSlot(GetGearSlot(item.Position));
+                depo.Add(MoveFromInventory(item.ID));
+
+                item.DepositoryId = id;
+                item.DepositoryType = type;
+
+                User.Send(new Depository(type, id, Depository.DepositoryAction.ShowItem, 1, item));
+            }
+        }
+
+        public Boolean MoveFromDepository(DepositoryType type, DepositoryId id, UInt32 itemId)
+        {
+            ItemDepository depo;
+            if (!Depositories[type].TryGetValue(id, out depo)) return false;
+
+            lock (depo.SyncRoot)
+            {
+                if (!AdequateInventorySpace()) return false;
+                Item item = depo.Remove(itemId);
+                item.DepositoryType = DepositoryType.None;
+                User.Send(item);
+                MoveToInventory(item);
+                return true;
+            }
+        }
+
+        #endregion
     }
 }

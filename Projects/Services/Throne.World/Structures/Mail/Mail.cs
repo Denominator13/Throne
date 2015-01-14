@@ -7,7 +7,6 @@ namespace Throne.World.Structures.Mail
 {
     /// <summary>
     ///     A message which is delivered to a player via mail.
-    ///     Lazily saved, delayed delivery
     /// </summary>
     public class Mail
     {
@@ -18,7 +17,7 @@ namespace Throne.World.Structures.Mail
             _record = record;
         }
 
-        public UInt32 ID
+        public UInt32 Id
         {
             get { return _record.Guid; }
         }
@@ -69,7 +68,7 @@ namespace Throne.World.Structures.Mail
             set
             {
                 _record.Money = value;
-                _record.UpdateNow();
+                _record.Update();
             }
         }
 
@@ -79,7 +78,7 @@ namespace Throne.World.Structures.Mail
             set
             {
                 _record.EMoney = value;
-                _record.UpdateNow();
+                _record.Update();
             }
         }
 
@@ -89,7 +88,7 @@ namespace Throne.World.Structures.Mail
             set
             {
                 _record.Item = value ? value.Record : null;
-                _record.UpdateNow();
+                _record.Update();
             }
         }
 

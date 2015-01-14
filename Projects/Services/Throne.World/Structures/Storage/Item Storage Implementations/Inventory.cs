@@ -8,16 +8,17 @@ namespace Throne.World.Structures.Storage
 {
     public sealed class Inventory : ItemStorage
     {
-        private const Int32 SIZE = 40;
         private readonly ConcurrentDictionary<UInt32, Item> _items;
 
-        public Inventory(IEnumerable<Item> payload)
+        public Inventory(ref List<Item> payload) : base(40)
         {
             _items = new ConcurrentDictionary<uint, Item>();
 
             if (payload == null) return;
             foreach (var item in payload.Where(item => item.Position == Item.Positions.Inventory))
                 Add(item);
+
+            payload.RemoveAll(item => item.Position == Item.Positions.Inventory);
         }
 
         public override IEnumerable<Item> Items
@@ -30,10 +31,16 @@ namespace Throne.World.Structures.Storage
             get { return _items.Count; }
         }
 
+        public Item this[UInt32 id]
+        {
+            get { return _items[id]; }
+            set { _items[id] = value; }
+        }
+
         public override Boolean Add(Item item)
         {
             lock (SyncRoot)
-                return _items.Count < SIZE && _items.TryAdd(item.ID, item);
+                return _items.Count < Size && _items.TryAdd(item.ID, item);
         }
 
         public override Item Remove(UInt32 guid)
@@ -46,27 +53,16 @@ namespace Throne.World.Structures.Storage
             }
         }
 
-        public Boolean AdequateSpace(Int32 forCount)
-        {
-            return Count + forCount <= SIZE;
-        }
-
-        public Item this[UInt32 id]
-        {
-            get { return _items[id]; }
-            set { _items[id] = value; }
-        }
-
 
         /// <summary>
-        /// To be used with a <see cref="T:Throne.Shared.Network.Transmission.Stream"/>
+        ///     To be used with a <see cref="T:Throne.Shared.Network.Transmission.Stream" />
         /// </summary>
         /// <param name="inv">Inventory to serialize</param>
         /// <returns></returns>
         public static implicit operator Byte[][](Inventory inv)
         {
             lock (inv.SyncRoot)
-                return inv.Items.Select(item => (byte[])item).ToArray();
+                return inv.Items.Select(item => (byte[]) item).ToArray();
         }
     }
 }

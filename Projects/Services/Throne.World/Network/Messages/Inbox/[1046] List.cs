@@ -24,11 +24,11 @@ namespace Throne.World.Network.Messages.Inbox
         /// <param name="list"></param>
         /// <param name="page"></param>
         /// <param name="more"></param>
-        public List(List<Mail> list, Int32 page, Boolean more)
-            : base(PacketTypes.MailList, 88*list.Count + 16 + 8)
+        public List(Int32 page, Boolean more, params Mail[] mails)
+            : base(PacketTypes.MailList, 88 * mails.Length + 16 + 8)
         {
             //write count for this send
-            WriteInt(list.Count);
+            WriteInt(mails.Length);
 
             //write paging info
             Seek(9);
@@ -39,9 +39,9 @@ namespace Throne.World.Network.Messages.Inbox
             Seek(15);
             WriteBoolean(more);
 
-            foreach (Mail mail in list)
+            foreach (Mail mail in mails)
             {
-                WriteUInt(mail.ID);
+                WriteUInt(mail.Id);
                 WriteString(mail.Sender);
                 SeekForward(32 - mail.Sender.Length);
                 WriteString(mail.Header);

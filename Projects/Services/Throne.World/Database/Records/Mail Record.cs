@@ -7,6 +7,15 @@ namespace Throne.World.Database.Records
 {
     public class MailRecord : WorldDatabaseRecord
     {
+        protected MailRecord()
+        {
+        }
+
+        public MailRecord(UInt32 id)
+        {
+            Guid = id;
+        }
+
         public virtual UInt32 Guid { get; set; }
         public virtual String Sender { get; set; }
         public virtual String Header { get; set; }
@@ -18,9 +27,21 @@ namespace Throne.World.Database.Records
         public virtual ItemRecord Item { get; set; }
         public virtual CharacterRecord Recipient { get; set; }
 
-        public virtual void UpdateNow()
+        public override void Create()
+        {
+            WorldServer.Instance.WorldDbContext.Commit(this);
+        }
+
+        public override void Update()
         {
             WorldServer.Instance.WorldDbContext.Update(this);
+        }
+
+        public override void Delete()
+        {
+            if (Recipient)
+                Recipient.MailPayload.Remove(this);
+            base.Delete();
         }
     }
 
@@ -40,7 +61,7 @@ namespace Throne.World.Database.Records
             Map(r => r.Opened);
             Map(r => r.Creation);
 
-            References(r => r.Item);
+            References(r => r.Item).Not.LazyLoad();
         }
     }
 }

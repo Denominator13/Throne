@@ -4,7 +4,7 @@
     {
         private void PingResponse()
         {
-            Character.User.Send(this);
+            Character.User.Send(base.Build());
         }
     }
 }

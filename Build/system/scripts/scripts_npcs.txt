@@ -5,3 +5,5 @@ npcs/Twin City/GuildDirector.cs
 npcs/Twin City/MailManager.cs
 npcs/Twin City/AuctionManager.cs
 npcs/Twin City/Surgeon.cs
+npcs/Twin City/Item Person.cs
+npcs/Twin City/Warehouseman.cs

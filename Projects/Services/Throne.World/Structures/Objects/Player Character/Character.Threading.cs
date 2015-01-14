@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading.Tasks;
 using Throne.Framework;
 using Throne.Framework.Threading.Actors;
 using Throne.World.Properties.Settings;
@@ -14,6 +13,11 @@ namespace Throne.World.Structures.Objects
         private readonly Object _syncTimerDictionary = new Object();
         private readonly Dictionary<CharacterTask, CharacterTimer> _timers;
         private Boolean _canBeginTasks = true;
+
+        public Actor Actor
+        {
+            get { return User; }
+        }
 
         /// <summary>
         ///     Creates a new <see cref="Throne.Framework.Threading.Actors.ActorTimer" />
@@ -95,11 +99,6 @@ namespace Throne.World.Structures.Objects
                 return true;
             }
         }
-
-        public Actor Actor
-        {
-            get { return User; }
-        }
     }
 
     public enum CharacterTask
@@ -127,13 +126,6 @@ namespace Throne.World.Structures.Objects
         public override string ToString()
         {
             return StrRes.SMSG_CharacterTimerString.Interpolate(Task);
-        }
-
-        protected override void TimerCallback(object state)
-        {
-
-            Console.WriteLine(this.Callback.GetType().Name);
-            base.TimerCallback(state);
         }
     }
 }

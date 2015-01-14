@@ -219,6 +219,6 @@ namespace Throne.World.Network.Messages
         Pink = 0xFF00FF,
         Green = 0x00FF00,
         Blue = 0x0000FF,
-        Red = 0xFF0000
+        Red = 16711680
     }
 }
