@@ -28,9 +28,9 @@ namespace Throne.World.Network.Messages
             WriteUInt(mapId);
         }
 
-        public override bool Read(IClient client)
+        public override bool Read(WorldClient client)
         {
-            ((WorldClient) client).Character.InitializationSignal.Release();
+            client.Character.InitializationSignal.Release();
             return true;
         }
     }

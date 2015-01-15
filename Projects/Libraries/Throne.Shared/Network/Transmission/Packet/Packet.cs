@@ -55,15 +55,6 @@ namespace Throne.Framework.Network.Transmission
 
         #region Processing
 
-        public virtual Boolean Read(IClient client)
-        {
-            return false;
-        }
-
-        public virtual void Handle(IClient client)
-        {
-        }
-
         public override sealed unsafe void WriteHeader(int length)
         {
             base.WriteHeader(length);

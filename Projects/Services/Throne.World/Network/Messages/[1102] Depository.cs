@@ -79,7 +79,7 @@ namespace Throne.World.Network.Messages
             }
         }
 
-        public override bool Read(IClient client)
+        public override bool Read(WorldClient client)
         {
             _depositoryId = (DepositoryId) ReadUInt();
             SeekForward(4);
@@ -91,12 +91,12 @@ namespace Throne.World.Network.Messages
             return true;
         }
 
-        public override void Handle(IClient client)
+        public override void Handle(WorldClient client)
         {
             if (!Enum.IsDefined(typeof (DepositoryType), _activeType))
                 throw new ModerateViolation("Player attempted to interact with a non-existant depository type.");
 
-            var chr = ((WorldClient) client).Character;
+            var chr = client.Character;
             ItemDepository depo;
             if (!chr.Depositories[_activeType].TryGetValue(_depositoryId, out depo))
                 return;
@@ -110,7 +110,7 @@ namespace Throne.World.Network.Messages
                     var item = chr.GetItem(_itemId);
                     if (item)
                         chr.MoveToDepository(_activeType, _depositoryId, item);
-                    else client.Respond("No such item.");
+                    else client.Send("No such item.");
                         break;
                     case DepositoryAction.WithdrawItem:
                     if (chr.MoveFromDepository(_activeType, _depositoryId, _itemId))

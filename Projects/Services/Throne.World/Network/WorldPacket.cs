@@ -10,6 +10,7 @@ namespace Throne.World.Network
         {
         }
 
+
         public WorldPacket(IConvertible type, int len)
             : base(type, len)
         {
@@ -24,6 +25,15 @@ namespace Throne.World.Network
             : base(len)
         {
             Seek(4);
+        }
+
+        public virtual Boolean Read(WorldClient client)
+        {
+            return false;
+        }
+
+        public virtual void Handle(WorldClient client)
+        {
         }
 
         protected override byte[] Build()

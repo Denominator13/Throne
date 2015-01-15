@@ -19,7 +19,7 @@ namespace Throne.Login.Network
         private const Int32 MAX_MSG_SIZE = 1016;
         private const Int32 MAX_STREAM_SIZE = UInt16.MaxValue;
 
-        private readonly LogProxy _log = new LogProxy("AuthClient");
+        private readonly Logger _log = new Logger("AuthClient");
 
 
         private readonly Int32 _minStreamSize;
@@ -79,7 +79,7 @@ namespace Throne.Login.Network
 
         public INetworkCipher TransferCipher { get; set; }
 
-        public LogProxy Log
+        public Logger Log
         {
             get { return _log; }
         }

@@ -27,6 +27,7 @@ namespace Throne.World.Structures.Objects
         public Item RemoveItem(Item itm)
         {
             itm.OwnerInfo = null;
+
             if (itm.Position > Item.Positions.Inventory)
                 UnequipGearSlot(GetGearSlot(itm.Position));
             return MoveFromInventory(itm.ID);

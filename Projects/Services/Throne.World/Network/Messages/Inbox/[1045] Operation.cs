@@ -35,16 +35,17 @@ namespace Throne.World.Network.Messages.Inbox
             MailId = mailId;
         }
 
-        public override bool Read(IClient client)
+        public override bool Read(WorldClient client)
         {
             Type = (Types) ReadInt();
             MailId = ReadUInt();
             return true;
         }
 
-        public override void Handle(IClient client)
+        public override void Handle(WorldClient client)
         {
-            var chr = ((WorldClient) client).Character;
+            var chr = client.Character;
+
             switch (Type)
             {
                 case Types.Open:

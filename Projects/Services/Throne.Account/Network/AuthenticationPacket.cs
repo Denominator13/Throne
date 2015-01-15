@@ -1,5 +1,5 @@
 ﻿using System;
-using Throne.Framework.Network.Connectivity;
+using Throne.Login.Network;
 
 namespace Throne.Framework.Network.Transmission
 {
@@ -16,6 +16,15 @@ namespace Throne.Framework.Network.Transmission
 
         public AuthenticationPacket(byte[] payload)
             : base(payload)
+        {
+        }
+
+        public virtual Boolean Read(AuthenticationClient client)
+        {
+            return false;
+        }
+
+        public virtual void Handle(AuthenticationClient client)
         {
         }
     }

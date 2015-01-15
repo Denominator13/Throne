@@ -1,12 +1,9 @@
 ﻿using System;
-using Throne.Framework.Network.Connectivity;
 using Throne.Framework.Network.Transmission;
-using Throne.Framework.Runtime;
 using Throne.Framework.Security.Permissions;
 using Throne.World.Network.Handling;
 using Throne.World.Structures.Objects;
 using Throne.World.Structures.Travel;
-using Throne.World.Structures.World;
 
 namespace Throne.World.Network.Messages
 {
@@ -114,14 +111,14 @@ namespace Throne.World.Network.Messages
             set { Seek(36).WriteInt(value); }
         }
 
-        public override bool Read(IClient client)
+        public override bool Read(WorldClient client)
         {
             return true;
         }
 
-        public override void Handle(IClient client)
+        public override void Handle(WorldClient client)
         {
-            Character = ((WorldClient) client).Character;
+            Character = client.Character;
 
             switch (Type)
             {

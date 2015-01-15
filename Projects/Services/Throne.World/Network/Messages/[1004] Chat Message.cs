@@ -87,9 +87,9 @@ namespace Throne.World.Network.Messages
             received = true;
         }
 
-        public override bool Read(IClient client)
+        public override bool Read(WorldClient client)
         {
-            Client = (WorldClient)client;
+            Client = client;
 
             ReadInt();
             Color = Color.FromArgb(ReadInt());
@@ -132,7 +132,7 @@ namespace Throne.World.Network.Messages
             }
         }
 
-        public override void Handle(IClient client)
+        public override void Handle(WorldClient client)
         {
             Seek(4);
             ChatManager.Instance.PostAsync(cm => cm.ProcessChatMessage(this));

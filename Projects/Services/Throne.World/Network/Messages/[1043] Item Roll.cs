@@ -29,7 +29,7 @@ namespace Throne.World.Network.Messages
             WriteInt(seconds); //time in seconds
         }
 
-        public override bool Read(IClient client)
+        public override bool Read(WorldClient client)
         {
             var itemGuid = ReadInt();
             SeekForward(4); // unknown

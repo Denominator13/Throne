@@ -17,46 +17,45 @@ namespace Throne.World.Network.Messages
         ///     Incoming constructor.
         /// </summary>
         /// <param name="array">Incoming byte array.</param>
-        public ClientAuthentication(byte[] array) : base(array)
+        public ClientAuthentication(byte[] array)
+            : base(array)
         {
         }
 
-        public override bool Read(IClient client)
+        public override bool Read(WorldClient client)
         {
             _password = ReadInt();
             _session = ReadInt();
             return true;
         }
 
-        public override void Handle(IClient client)
+        public override void Handle(WorldClient client)
         {
-            var c = (WorldClient) client;
-
             WorldServer.Instance.AccountService.Call(accService =>
             {
                 if (!accService.Authorize(_session, _password))
                     return;
 
-                c.AccountData = new AccountRecord(accService.GetAccount(_session));
+                client.AccountData = accService.GetAccount(_session);
                 client.AddPermission(new AuthenticatedPermission());
+                accService.SetOnline(client.AccountData.UserGuid, true);
             });
 
-            if (client.HasPermission(typeof (AuthenticatedPermission)))
+            if (client.HasPermission(typeof(AuthenticatedPermission)))
             {
-                c.SendArrays(
+                client.SendArrays(
                     Constants.LoginMessages.ServerInfo,
                     Constants.LoginMessages.AnswerOk,
                     new TimeSynchronize(DateTime.Now));
 
-                CharacterRecord chr = CharacterManager.Instance.FindCharacterRecord(c);
+                CharacterRecord chr = CharacterManager.Instance.FindCharacterRecord(client);
 
                 if (chr == null)
                 {
                     client.Send(Constants.LoginMessages.NewRole);
                     return;
                 }
-
-                ((WorldClient) client).SetCharacter(CharacterManager.Instance.InitiaizeCharacter(c, chr));
+                client.SetCharacter(CharacterManager.Instance.InitiaizeCharacter(client, chr));
             }
             else
                 client.DisconnectWithMessage(Constants.LoginMessages.BadAuthentication);

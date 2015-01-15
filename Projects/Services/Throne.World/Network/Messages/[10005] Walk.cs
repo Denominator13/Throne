@@ -39,7 +39,7 @@ namespace Throne.World.Network.Messages
         {
         }
 
-        public override bool Read(IClient client)
+        public override bool Read(WorldClient client)
         {
             //The same unique ID appears at 8 and 20...
             Orientation = (Orientation) (ReadInt()%8);
@@ -50,10 +50,9 @@ namespace Throne.World.Network.Messages
             return true;
         }
 
-        public override void Handle(IClient client)
+        public override void Handle(WorldClient client)
         {
-            var c = ((WorldClient) client).Character;
-            c.GroundMovement(this);
+            client.Character.GroundMovement(this);
         }
     }
 }

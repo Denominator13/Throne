@@ -12,7 +12,7 @@ namespace Throne.Login.Network.Messages
         {
         }
 
-        public override void Handle(IClient client)
+        public override void Handle(AuthenticationClient client)
         {
             client.Disconnect();
         }

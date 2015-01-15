@@ -192,13 +192,13 @@
     <Compile Include="Commands\World\MapInfoCommand.cs" />
     <Compile Include="Commands\World\WeatherCommand.cs" />
     <Compile Include="Database\Implementations\Conventions\Naming\WorldClassNamingConvention.cs" />
-    <Compile Include="Database\Records\Account Record.cs" />
     <Compile Include="Database\Records\Mail Record.cs" />
     <Compile Include="Managers\Character Manager.cs" />
     <Compile Include="Managers\Chat Manager.cs" />
     <Compile Include="Managers\Item Manager.cs" />
     <Compile Include="Managers\Mail Manager.cs" />
     <Compile Include="Managers\World Manager.cs" />
+    <Compile Include="Network\Handling\WorldPacketHandler.cs" />
     <Compile Include="Network\Handling\WorldPacketHandlerAttribute.cs" />
     <Compile Include="Network\Handling\WorldPacketPropagator.cs" />
     <Compile Include="Network\Messages\Inbox\[1045] Operation.cs" />

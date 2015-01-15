@@ -47,6 +47,8 @@ namespace Throne.World.Structures.Objects
             get { return Record.Owner; }
             set
             {
+                if (!value)
+                    Record.Owner.ItemPayload.Remove(Record);
                 Record.Owner = value;
                 Record.Update();
             }

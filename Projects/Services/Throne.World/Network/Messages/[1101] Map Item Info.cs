@@ -1,24 +1,14 @@
 using System;
-using Throne.Framework.Network.Connectivity;
 using Throne.Framework.Network.Transmission;
 using Throne.Framework.Security.Permissions;
+using Throne.World.Network.Handling;
 using Throne.World.Structures.Objects;
 
 namespace Throne.World.Network.Messages
 {
-    [Handling.WorldPacketHandler(PacketTypes.MapItem, Permission = typeof(AuthenticatedPermission))]
+    [WorldPacketHandler(PacketTypes.MapItem, Permission = typeof (AuthenticatedPermission))]
     public sealed class MapItemInformation : WorldPacket
     {
-        public MapItemInformation(byte[] payload)
-            : base(payload)
-        {
-        }
-        public int Timestamp;
-        public uint UID, ItemID;
-        public ushort X, Y;
-        public Item.Color Color;
-        public MapItemTypes Type;
-        private Character Character;
         public enum MapItemTypes : short
         {
             None,
@@ -40,32 +30,20 @@ namespace Throne.World.Network.Messages
             DaggerStormV3,
             DaggerStorm = 46
         }
-        public override bool Read(IClient client)
+
+        public Item.Color Color;
+        public uint ItemId;
+
+        public int Timestamp;
+        public MapItemTypes Type;
+        public uint Uid;
+        public ushort X, Y;
+
+        public MapItemInformation(byte[] payload)
+            : base(payload)
         {
-            Timestamp = ReadInt();
-            UID = ReadUInt();
-            ItemID = ReadUInt();
-            X = ReadUShort();
-            Y = ReadUShort();
-            Color = (Item.Color)ReadUShort();
-            Type = (MapItemTypes)ReadUShort();
-            return true;
         }
-        public override void Handle(IClient client)
-        {
-            Character = ((WorldClient)client).Character;
-            if (Character.Location.Position.X == X && Character.Location.Position.Y == Y) //it should check if char is trading too.
-            {
-                if (!Character.AdequateInventorySpace(1))
-                    return;
-                var map = Character.Location.Map;
-                var item = map.GetItem(UID);
-                if (item == null) return;
-                item.OwnerInfo = Character.Record;
-                map.RemoveItem(item);
-                Character.MoveToInventory(item);
-            }
-        }
+
         public MapItemInformation(Item item, Boolean remove = false) : base(PacketTypes.MapItem, 48)
         {
             WriteInt(Environment.TickCount);
@@ -74,11 +52,53 @@ namespace Throne.World.Network.Messages
             WriteShort(item.Location.Position.X);
             WriteShort(item.Location.Position.Y);
             WriteShort(6); // color
-            WriteInt((Int16)(remove ? MapItemTypes.RemoveItem : MapItemTypes.DropItem)); // action
+            WriteInt((Int16) (remove ? MapItemTypes.RemoveItem : MapItemTypes.DropItem)); // action
             WriteUInt(0);
             WriteInt(0); // time created
             WriteInt(0); // currency value
             WriteShort(0); // item type
         }
-}
+
+        public MapItemInformation(MapItemTypes type, IWorldObject obj)
+            : base(PacketTypes.MapItem, 48)
+        {
+            WriteInt(Environment.TickCount);
+            WriteUInt(obj.ID);
+            WriteInt(0); // item type
+            WriteShort(obj.Location.Position.X);
+            WriteShort(obj.Location.Position.Y);
+            WriteShort(0); // color
+            WriteInt((Int16)type);
+        }
+
+        public override bool Read(WorldClient client)
+        {
+            Timestamp = ReadInt();
+            Uid = ReadUInt();
+            ItemId = ReadUInt();
+            X = ReadUShort();
+            Y = ReadUShort();
+            Color = (Item.Color) ReadUShort();
+            Type = (MapItemTypes) ReadUShort();
+            return true;
+        }
+
+        public override void Handle(WorldClient client)
+        {
+            var chr = client.Character;
+            if (chr.Location.Position.X != X || chr.Location.Position.Y != Y) return;
+            if (!chr.AdequateInventorySpace()) return;
+
+            var map = chr.Location.Map;
+            var item = map.GetItem(Uid);
+            if (!item) return;
+
+            item.OwnerInfo = chr.Record;
+
+            client.Send(this);
+            client.Character.SendToLocal(new MapItemInformation(MapItemTypes.ObtainItem, client.Character));
+            map.RemoveItem(item);
+            chr.AddItem(item);
+        }
+    }
 }

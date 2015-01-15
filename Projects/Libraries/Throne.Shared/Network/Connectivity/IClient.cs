@@ -17,7 +17,7 @@ namespace Throne.Framework.Network.Connectivity
 
         Int32 SocketId { get; }
 
-        LogProxy Log { get; }
+        Logger Log { get; }
         void Disconnect();
         void DisconnectWithMessage(Byte[] message);
         void Send(byte[] value);

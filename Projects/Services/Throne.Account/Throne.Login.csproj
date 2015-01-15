@@ -177,12 +177,13 @@
   <ItemGroup>
     <Compile Include="Network\AuthenticationClient.cs" />
     <Compile Include="Network\AuthenticationPacket.cs" />
+    <Compile Include="Network\Handling\AuthenticationPacketHandler.cs" />
     <Compile Include="Network\Handling\AuthenticationPacketHandlerAttribute.cs" />
     <Compile Include="Network\Handling\AuthenticationPacketPropagator.cs" />
     <Compile Include="Properties\GlobalDefaults.Designer.cs">
-      <DependentUpon>GlobalDefaults.settings</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>GlobalDefaults.settings</DependentUpon>
     </Compile>
     <Compile Include="Properties\StrRes1.Designer.cs">
       <DependentUpon>StrRes.resx</DependentUpon>

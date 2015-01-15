@@ -1,5 +1,4 @@
 ﻿using System;
-using Throne.Framework.Network.Connectivity;
 using Throne.Framework.Network.Transmission;
 using Throne.World.Network.Handling;
 using Throne.World.Security;
@@ -27,9 +26,9 @@ namespace Throne.World.Network.Messages
             SeekForward(sizeof (int)); //incoming timestamp
         }
 
-        public override bool Read(IClient client)
+        public override bool Read(WorldClient client)
         {
-            Character chr = ((WorldClient) client).Character;
+            Character chr = client.Character;
             uint id = ReadUInt();
             short unknown1 = ReadShort();
             byte option = ReadByte();
@@ -48,7 +47,7 @@ namespace Throne.World.Network.Messages
                     break;
 
                 default:
-                    client.Respond("This NPC action ({0}) has not yet been implemented.");
+                    client.Send("This NPC action ({0}) has not yet been implemented.");
                     break;
             }
             return false;

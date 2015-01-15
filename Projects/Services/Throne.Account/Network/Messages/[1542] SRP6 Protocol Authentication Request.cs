@@ -1,5 +1,4 @@
 ﻿using System;
-using Throne.Framework.Network.Connectivity;
 using Throne.Framework.Network.Transmission;
 using Throne.Login.Accounts;
 using Throne.Login.Network.Handling;
@@ -27,7 +26,7 @@ namespace Throne.Login.Network.Messages
         {
         }
 
-        public override bool Read(IClient client)
+        public override bool Read(AuthenticationClient client)
         {
             if (ArrayLength != LENGTH)
                 InvalidValue(client, "Length", ArrayLength, LENGTH);
@@ -42,7 +41,7 @@ namespace Throne.Login.Network.Messages
             return true;
         }
 
-        public override void Handle(IClient client)
+        public override void Handle(AuthenticationClient client)
         {
             //TODO: Better method for exchange IDs
 
@@ -62,7 +61,6 @@ namespace Throne.Login.Network.Messages
                     userRecord.MacAddress = MacAddress;
                     userRecord.LastLogin = DateTime.Now;
                     userRecord.LastIP = client.ClientAddress;
-                    userRecord.Online = true;
 
                     using (
                         var packet = new AuthenticationAction(userRecord.Guid, userRecord.Password.GetHashCode(),
@@ -79,19 +77,16 @@ namespace Throne.Login.Network.Messages
             AuthServer.Instance.AccountDbContext.Commit(new AccountRecord(Username, Password, ""));
             AccountManager.Instance.LoadAccounts();
             if (AccountManager.Instance.FindAccount(acc => acc.Username == Username, out userRecord))
-            { 
+            {
+                userRecord.MacAddress = MacAddress;
+                userRecord.LastLogin = DateTime.Now;
+                userRecord.LastIP = client.ClientAddress;
 
-            userRecord.MacAddress = MacAddress;
-            userRecord.LastLogin = DateTime.Now;
-            userRecord.LastIP = client.ClientAddress;
-            userRecord.Online = true;
-
-            using (
-                var packet = new AuthenticationAction(userRecord.Guid, userRecord.Password.GetHashCode(),
-                    GlobalDefaults.Default.TestServerPort, GlobalDefaults.Default.TestServerIp))
-                client.Send(packet);
-}
-
+                using (
+                    var packet = new AuthenticationAction(userRecord.Guid, userRecord.Password.GetHashCode(),
+                        GlobalDefaults.Default.TestServerPort, GlobalDefaults.Default.TestServerIp))
+                    client.Send(packet);
+            }
         }
     }
 }

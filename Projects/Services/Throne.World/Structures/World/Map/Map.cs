@@ -26,7 +26,7 @@ namespace Throne.World.Structures.World
         public readonly String DataMapPath;
         private readonly MapInfoRecord _record;
         public UInt32 Instance;
-        public LogProxy Log;
+        public Logger Log;
 
         private Cell[,] _cells;
 
@@ -37,7 +37,7 @@ namespace Throne.World.Structures.World
         public Map(MapInfoRecord record)
         {
             _record = record;
-            Log = new LogProxy("Region {0}".Interpolate(_record.MapId));
+            Log = new Logger("Region {0}".Interpolate(_record.MapId));
 
             DataMapPath = record.DataMapPath;
 

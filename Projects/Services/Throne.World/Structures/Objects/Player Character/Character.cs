@@ -38,7 +38,7 @@ namespace Throne.World.Structures.Objects
             User = user;
             Record = record;
 
-            User.Log = new LogProxy("{0}:{1}".Interpolate(Name, user.ClientAddress));
+            User.Log = new Logger("{0}:{1}".Interpolate(Name, user.ClientAddress));
             Log.Info(StrRes.SMSG_LoggedIn);
 
             _timers = new Dictionary<CharacterTask, CharacterTimer>();
@@ -64,7 +64,7 @@ namespace Throne.World.Structures.Objects
             Initialize();
         }
 
-        public LogProxy Log
+        public Logger Log
         {
             get { return User.Log; }
         }

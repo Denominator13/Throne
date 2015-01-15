@@ -77,7 +77,7 @@ namespace Throne.World.Structures.Objects
         public Profession PreviousJob
         {
             get { return Record.PreviousJob; }
-            protected set
+            set
             {
                 AncestorJob = Record.PreviousJob;
                 Record.PreviousJob = value;
@@ -87,7 +87,7 @@ namespace Throne.World.Structures.Objects
         public Profession AncestorJob
         {
             get { return Record.AncestorJob; }
-            protected set
+            set
             {
                 Record.AncestorJob = value;
                 Record.Update();

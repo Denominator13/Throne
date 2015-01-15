@@ -5,6 +5,6 @@ namespace Throne.Framework.Network.Handling
 {
     public interface IPacketPropagator
     {
-        void Handle(IClient client, short typeId, byte[] payload, short length);
+        void Handle<TClient>(TClient client, short typeId, byte[] payload, short length) where TClient : IClient;
     }
 }

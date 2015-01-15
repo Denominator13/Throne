@@ -5,7 +5,8 @@ namespace Throne.Login.Network.Handling
 {
     public sealed class AuthenticationPacketPropagator : PacketPropagatorBase<
         AuthenticationPacketHandlerAttribute,
-        AuthenticationPacket>
+        AuthenticationPacket,
+        AuthenticationPacketHandler>
     {
     }
 }

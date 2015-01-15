@@ -44,13 +44,13 @@ namespace Throne.World.Network.Messages
         {
         }
 
-        public override bool Read(IClient client)
+        public override bool Read(WorldClient client)
         {
-            _character = ((WorldClient) client).Character;
+            _character = client.Character;
             return true;
         }
 
-        public override void Handle(IClient client)
+        public override void Handle(WorldClient client)
         {
             NpcSession session = _character.NpcSession;
             var feedback = new DialogFeedback(Seek(14).ReadByte(),

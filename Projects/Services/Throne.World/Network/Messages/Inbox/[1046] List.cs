@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using Throne.Framework.Network.Connectivity;
 using Throne.Framework.Network.Transmission;
 using Throne.World.Managers;
 using Throne.World.Network.Handling;
@@ -18,14 +16,14 @@ namespace Throne.World.Network.Messages.Inbox
         }
 
         /// <summary>
-        /// This structure is not proper, but works in the way desired.
-        /// I've split two ints, using them to do my bidding. -Scotty
+        ///     This structure is not proper, but works in the way desired.
+        ///     I've split two ints, using them to do my bidding. -Scotty
         /// </summary>
         /// <param name="list"></param>
         /// <param name="page"></param>
         /// <param name="more"></param>
         public List(Int32 page, Boolean more, params Mail[] mails)
-            : base(PacketTypes.MailList, 88 * mails.Length + 16 + 8)
+            : base(PacketTypes.MailList, 88*mails.Length + 16 + 8)
         {
             //write count for this send
             WriteInt(mails.Length);
@@ -54,9 +52,9 @@ namespace Throne.World.Network.Messages.Inbox
             }
         }
 
-        public override bool Read(IClient client)
+        public override bool Read(WorldClient client)
         {
-            Character c = ((WorldClient) client).Character;
+            Character c = client.Character;
 
             bool Refresh = Seek(8).ReadByte() == 0;
             byte RequestPage = ReadByte();

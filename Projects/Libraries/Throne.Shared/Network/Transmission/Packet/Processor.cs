@@ -9,7 +9,7 @@ namespace Throne.Framework.Network.Transmission
 {
     public abstract unsafe class Processor
     {
-        protected static readonly LogProxy Log = new LogProxy("PacketProcessor");
+        protected static readonly Logger Log = new Logger("PacketProcessor");
 
         /// <summary> Guts of a packet, the byte array. </summary>
         public Byte[] Array;

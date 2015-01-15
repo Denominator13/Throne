@@ -1,5 +1,4 @@
 ﻿using System;
-using Throne.Framework.Network.Connectivity;
 using Throne.Framework.Network.Transmission;
 using Throne.World.Network.Handling;
 using Throne.World.Properties;
@@ -25,12 +24,12 @@ namespace Throne.World.Network.Messages
         {
         }
 
-        public override bool Read(IClient client)
+        public override bool Read(WorldClient client)
         {
-            _action = (Action)ReadInt();
+            _action = (Action) ReadInt();
             _name = SeekForward(16).ReadString(16);
             _model = SeekForward(32).ReadShort();
-            var professionSelection = ReadShort();
+            short professionSelection = ReadShort();
             SeekForward(4); //entity id?
             _macAddress = ReadString(16);
 
@@ -72,7 +71,7 @@ namespace Throne.World.Network.Messages
             return true;
         }
 
-        public override void Handle(IClient client)
+        public override void Handle(WorldClient client)
         {
             if (_action == Action.Create)
                 CharacterManager.Instance.PostAsync(
@@ -82,7 +81,7 @@ namespace Throne.World.Network.Messages
                             client.Send(Constants.CharacterManagementMessages.NameInvalid);
                         else
                         {
-                            if (mgr.CreateCharacter((WorldClient)client, _name, _job, _macAddress, _model))
+                            if (mgr.CreateCharacter(client, _name, _job, _macAddress, _model))
                                 client.Send(Constants.CharacterManagementMessages.AnswerOk);
                         }
                     });

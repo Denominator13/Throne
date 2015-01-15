@@ -11,6 +11,7 @@ using Throne.Framework.Network.Communication;
 using Throne.Framework.Network.Connectivity;
 using Throne.Framework.Network.Handling;
 using Throne.Framework.Network.Security;
+using Throne.Framework.Services.Account;
 using Throne.Framework.Threading.Actors;
 using Throne.World.Network.Exchange;
 using Throne.World.Network.Messages;
@@ -29,7 +30,7 @@ namespace Throne.World.Network
         private readonly Int32 _minStreamSize;
 
         private readonly IPacketPropagator _propagator;
-        private LogProxy _log = new LogProxy("WorldClient");
+        private Logger _log = new Logger("WorldClient");
         private ActorTimer _updateTimer;
 
         public WorldClient(ConnectionEventArgs args)
@@ -51,18 +52,18 @@ namespace Throne.World.Network
 
         public Character Character { get; private set; }
         public NetDragonDHKeyExchange ExchangeData { get; set; }
-        public AccountRecord AccountData { get; set; }
+        public AccountData AccountData { get; set; }
 
         public IPAddress ClientAddress
         {
-            get { return Disconnected ? AccountData.IP : ((IPEndPoint) Socket.RemoteEndPoint).Address; }
+            get { return Disconnected ? AccountData.LastIP : ((IPEndPoint) Socket.RemoteEndPoint).Address; }
         }
 
         public INetworkCipher StreamCipher { get; private set; }
 
         public INetworkCipher TransferCipher { get; set; }
 
-        public LogProxy Log
+        public Logger Log
         {
             get { return _log; }
             set { _log = value; }
@@ -231,7 +232,7 @@ namespace Throne.World.Network
             Dispose();
 
             WorldServer.Instance.Info.OnlineCount--;
-            WorldServer.Instance.AccountService.Call(s => s.SetOnline(AccountData.Guid, false));
+            WorldServer.Instance.AccountService.Call(s => s.SetOnline(AccountData.UserGuid, false));
 
             base.Disconnect();
         }

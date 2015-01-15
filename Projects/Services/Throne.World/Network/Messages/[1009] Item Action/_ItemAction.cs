@@ -39,7 +39,7 @@ namespace Throne.World.Network.Messages
         {
         }
 
-        public override bool Read(IClient client)
+        public override bool Read(WorldClient client)
         {
             SeekForward(sizeof(Int32));
             Guid = ReadUInt();
@@ -60,10 +60,10 @@ namespace Throne.World.Network.Messages
             return true;
         }
 
-       
-        public override void Handle(IClient client)
+
+        public override void Handle(WorldClient client)
         {
-            Character = ((WorldClient)client).Character;
+            Character = client.Character;
 
             switch (ActionType)
             {
