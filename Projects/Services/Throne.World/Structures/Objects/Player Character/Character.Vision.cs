@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using Throne.World.Network.Messages;
-using Throne.World.Properties.Settings;
+using Throne.World.Properties;
 using Throne.World.Structures.Objects.Actors;
 using Throne.World.Structures.Travel;
 using Throne.World.Structures.World;
@@ -177,7 +177,7 @@ namespace Throne.World.Structures.Objects
             int sDistance = Location.Position.GetDistance(jmp.Destination);
             int cDistance = jmp.ReportedCurrentPosition.GetDistance(jmp.Destination);
 
-            if (sDistance > EntitySettings.Default.MaxJumpDistance)
+            if (sDistance > WorldServer.Configuration.World.MaxJumpRange)
                 return false;
             if (sDistance != cDistance)
                 Log.Warn(StrRes.SMSG_SynchroLost);

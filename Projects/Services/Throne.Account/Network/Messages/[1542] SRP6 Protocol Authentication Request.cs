@@ -8,7 +8,7 @@ using Throne.Login.Records;
 namespace Throne.Login.Network.Messages
 {
     [AuthenticationPacketHandler(PacketTypes.Srp6ProtocolAuthenticationRequest)]
-    public sealed class SRP6ProtocolAuthenticationRequest : AuthenticationPacket
+    public sealed class SRP6ProtocolAuthenticationRequest : LoginPacket
     {
         private const int LENGTH = 312;
 
@@ -26,7 +26,7 @@ namespace Throne.Login.Network.Messages
         {
         }
 
-        public override bool Read(AuthenticationClient client)
+        public override bool Read(LoginClient client)
         {
             if (ArrayLength != LENGTH)
                 InvalidValue(client, "Length", ArrayLength, LENGTH);
@@ -41,9 +41,9 @@ namespace Throne.Login.Network.Messages
             return true;
         }
 
-        public override void Handle(AuthenticationClient client)
+        public override void Handle(LoginClient client)
         {
-            //TODO: Better method for exchange IDs
+            //TODO: Transfer to the game server based on the server name... (must communicate server names on connection with the account service)
 
             Account userRecord;
             if (AccountManager.Instance.FindAccount(x => x.Username == Username, out userRecord))
@@ -64,7 +64,7 @@ namespace Throne.Login.Network.Messages
 
                     using (
                         var packet = new AuthenticationAction(userRecord.Guid, userRecord.Password.GetHashCode(),
-                            GlobalDefaults.Default.TestServerPort, GlobalDefaults.Default.TestServerIp))
+                           LoginServer.Configuration.Network.GamePort, LoginServer.Configuration.Network.GameIP))
                         client.Send(packet);
                 }
                 else
@@ -74,7 +74,7 @@ namespace Throne.Login.Network.Messages
                 return;
             }
 
-            AuthServer.Instance.AccountDbContext.Commit(new AccountRecord(Username, Password, ""));
+            LoginServer.Instance.AccountDbContext.Commit(new AccountRecord(Username, Password, ""));
             AccountManager.Instance.LoadAccounts();
             if (AccountManager.Instance.FindAccount(acc => acc.Username == Username, out userRecord))
             {
@@ -84,7 +84,7 @@ namespace Throne.Login.Network.Messages
 
                 using (
                     var packet = new AuthenticationAction(userRecord.Guid, userRecord.Password.GetHashCode(),
-                        GlobalDefaults.Default.TestServerPort, GlobalDefaults.Default.TestServerIp))
+                        LoginServer.Configuration.Network.GamePort, LoginServer.Configuration.Network.GameIP))
                     client.Send(packet);
             }
         }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Throne.World.Network;
-using Throne.World.Properties.Settings;
 using Throne.World.Structures.Objects;
 using Throne.World.Structures.Travel;
 
@@ -58,7 +57,7 @@ namespace Throne.World.Structures.World
                     _users.Values.Where(
                         usr =>
                             usr.ID != nearThis.ID &&
-                            usr.Location.Position.InRange(pos, MapSettings.Default.PlayerScreenRange)));
+                            usr.Location.Position.InRange(pos, WorldServer.Configuration.World.PlayerScreenRange)));
             return result;
         }
 

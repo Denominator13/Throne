@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Threading;
 using Throne.Framework;
@@ -9,14 +8,13 @@ using Throne.Framework.Logging;
 using Throne.Framework.Runtime;
 using Throne.World.Network;
 using Throne.World.Network.Messages;
-using Throne.World.Properties.Settings;
+using Throne.World.Properties;
 using Throne.World.Records;
 using Throne.World.Sessions;
 using Throne.World.Structures.Mail;
 using Throne.World.Structures.Objects.Actors;
 using Throne.World.Structures.Storage;
 using Throne.World.Structures.Travel;
-using Constants = Throne.World.Properties.Constants;
 
 namespace Throne.World.Structures.Objects
 {
@@ -46,7 +44,7 @@ namespace Throne.World.Structures.Objects
             _look = new Model(Record.Look);
             _pStats = new BooleanArray<RoleState>(192);
 
-            var items = Record.ItemPayload.Select(itemRecord => new Item(itemRecord)).ToList();
+            List<Item> items = Record.ItemPayload.Select(itemRecord => new Item(itemRecord)).ToList();
             {
                 ConstructItemDepositories(ref items);
 
@@ -126,6 +124,7 @@ namespace Throne.World.Structures.Objects
         {
             User.Disconnect();
         }
+
         public override string ToString()
         {
             return Name;
@@ -182,7 +181,7 @@ namespace Throne.World.Structures.Objects
             Position pos = Location.Position.GetPrevious();
             Position otherPos = with.Location.Position;
             int pDistance = otherPos - pos;
-            int gap = MapSettings.Default.PlayerScreenRange - pDistance;
+            int gap = WorldServer.Configuration.World.PlayerScreenRange - pDistance;
             Position fauxPos = otherPos.GetRelative(pos, gap);
 
             Location.Position.Relocate(fauxPos);

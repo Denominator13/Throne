@@ -73,7 +73,7 @@ namespace Throne.Login.Records.Implementations
         /// </param>
         public virtual SerialGenerator GetSerialGenerator(String @for, UInt32 minVal, UInt32 maxVal)
         {
-            return AuthServer.Instance.AccountDbContext.Find<SerialGenerator>(g => g.Id == @for).First() ??
+            return LoginServer.Instance.AccountDbContext.Find<SerialGenerator>(g => g.Id == @for).First() ??
                    new SerialGenerator(@for, minVal, maxVal);
         }
 
@@ -97,17 +97,17 @@ namespace Throne.Login.Records.Implementations
 
     public sealed class SerialGeneratorManager : SingletonActor<SerialGeneratorManager>
     {
-        public readonly LogProxy Log;
+        public readonly Logger Log;
         private readonly List<SerialGenerator> _generators;
 
         private SerialGeneratorManager()
         {
-            Log = new LogProxy("SerialGenerator");
+            Log = new Logger("SerialGenerator");
             Log.Info("Loading generators...");
 
             _generators = new List<SerialGenerator>();
             List<SerialGenerator> generators =
-                AuthServer.Instance.AccountDbContext.FindAll<SerialGenerator>().ToList();
+                LoginServer.Instance.AccountDbContext.FindAll<SerialGenerator>().ToList();
             foreach (SerialGenerator acc in generators)
                 _generators.Add(acc);
 

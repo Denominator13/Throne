@@ -16,12 +16,12 @@ namespace Throne.World.Managers
 {
     public sealed class MailManager : SingletonActor<MailManager>
     {
-        public readonly LogProxy Log;
+        public readonly Logger Log;
         public readonly SerialGenerator SerialGenerator;
 
         private MailManager()
         {
-            Log = new LogProxy("MailManager");
+            Log = new Logger("MailManager");
 
             SerialGeneratorManager.Instance.GetGenerator(typeof (MailRecord).Name, WorldObject.ItemIdMin,
                 WorldObject.ItemIdMax, ref SerialGenerator);

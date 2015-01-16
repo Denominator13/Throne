@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Throne.World.Network;
-using Throne.World.Properties.Settings;
 using Throne.World.Structures.Objects;
 using Throne.World.Structures.Objects.Actors;
 using Throne.World.Structures.Travel;
@@ -66,7 +65,7 @@ namespace Throne.World.Structures.World
             lock (ItemReadWrite)
                 result.AddRange(
                     _npcs.Values.Where(
-                        npc => npc.Location.Position.InRange(pos, MapSettings.Default.PlayerScreenRange)));
+                        npc => npc.Location.Position.InRange(pos, WorldServer.Configuration.World.PlayerScreenRange)));
             //todo: find npc screen range
 
             return result;

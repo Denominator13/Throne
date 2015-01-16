@@ -6,13 +6,13 @@ using Throne.Framework.Network.Transmission;
 namespace Throne.Login.Network.Messages
 {
     [AuthenticationPacketHandler(PacketTypes.RemoteMachineIdentification)]
-    public sealed class RemoteMachineIdentification : AuthenticationPacket
+    public sealed class RemoteMachineIdentification : LoginPacket
     {
         public RemoteMachineIdentification(Byte[] array) : base(array)
         {
         }
 
-        public override void Handle(AuthenticationClient client)
+        public override void Handle(LoginClient client)
         {
             client.Disconnect();
         }

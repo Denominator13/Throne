@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Drawing;
-using Throne.Framework.Network.Connectivity;
 using Throne.Framework.Network.Transmission;
 using Throne.World.Network.Handling;
-using Throne.World.Properties.Settings;
+using Throne.World.Properties;
 using Throne.World.Security;
 using Throne.World.Structures.Objects;
 
@@ -15,9 +14,8 @@ namespace Throne.World.Network.Messages
         public const String SYSTEM = "SYSTEM", ALLUSERS = "ALLUSERS";
         private const Int32 MINIMUM_LENGTH = 33, MINIMUM_STRINGS = 7;
 
-        public Color Color;
-
         public WorldClient Client;
+        public Color Color;
 
         public UInt32 Identity;
 
@@ -25,20 +23,23 @@ namespace Throne.World.Network.Messages
             Message,
             MessagePrefix = "",
             MessageSuffix = "",
-            Recipient = "",
-            Sender = "";
+            Recipient = "";
 
         public UInt32 RecipientMesh;
+
+        public String
+            Sender = "";
+
         public UInt32 SenderMesh;
+        public String[] Strings = new String[7];
         public MessageStyle Style;
         public MessageChannel Type;
-        public String[] Strings = new String[7];
         private Boolean received;
 
         public ChatMessage(MessageChannel type, String message)
             : base(0)
         {
-            TypeId = (short)PacketTypes.ChatMessage;
+            TypeId = (short) PacketTypes.ChatMessage;
 
             Type = type;
             Style = MessageStyle.Normal;
@@ -51,7 +52,7 @@ namespace Throne.World.Network.Messages
         public ChatMessage(MessageChannel type, String message, Role to)
             : base(0)
         {
-            TypeId = (short)PacketTypes.ChatMessage;
+            TypeId = (short) PacketTypes.ChatMessage;
 
             Type = type;
             Style = MessageStyle.Normal;
@@ -65,7 +66,7 @@ namespace Throne.World.Network.Messages
         public ChatMessage(MessageChannel type, String message, MessageStyle style, Color color)
             : base(0)
         {
-            TypeId = (short)PacketTypes.ChatMessage;
+            TypeId = (short) PacketTypes.ChatMessage;
 
             Type = type;
             Style = style;
@@ -74,7 +75,6 @@ namespace Throne.World.Network.Messages
             Recipient = ALLUSERS;
             Message = message;
         }
-
 
 
         /// <summary>
@@ -87,14 +87,28 @@ namespace Throne.World.Network.Messages
             received = true;
         }
 
+        public Int32 Length
+        {
+            get
+            {
+                return
+                    MINIMUM_LENGTH +
+                    Recipient.Length +
+                    Sender.Length +
+                    MessageSuffix.Length +
+                    Message.Length +
+                    MessagePrefix.Length;
+            }
+        }
+
         public override bool Read(WorldClient client)
         {
             Client = client;
 
             ReadInt();
             Color = Color.FromArgb(ReadInt());
-            Type = (MessageChannel)ReadUShort();
-            Style = (MessageStyle)ReadUShort();
+            Type = (MessageChannel) ReadUShort();
+            Style = (MessageStyle) ReadUShort();
             Identity = ReadUInt();
             RecipientMesh = ReadUInt();
             SenderMesh = ReadUInt();
@@ -118,20 +132,6 @@ namespace Throne.World.Network.Messages
             return false;
         }
 
-        public Int32 Length
-        {
-            get
-            {
-                return
-                    MINIMUM_LENGTH +
-                    Recipient.Length +
-                    Sender.Length +
-                    MessageSuffix.Length +
-                    Message.Length +
-                    MessagePrefix.Length;
-            }
-        }
-
         public override void Handle(WorldClient client)
         {
             Seek(4);
@@ -144,8 +144,8 @@ namespace Throne.World.Network.Messages
             Seek(4);
             WriteInt(Environment.TickCount);
             WriteInt(Color.ToArgb());
-            WriteUShort((ushort)Type);
-            WriteUShort((ushort)Style);
+            WriteUShort((ushort) Type);
+            WriteUShort((ushort) Style);
             WriteUInt(Identity);
             WriteUInt(RecipientMesh);
             WriteUInt(SenderMesh);

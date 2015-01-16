@@ -1,6 +1,5 @@
 ﻿using System;
 using Throne.Framework.Network.Transmission;
-using Throne.World.Properties.Settings;
 
 namespace Throne.World.Network
 {
@@ -42,7 +41,7 @@ namespace Throne.World.Network
                 Log.Error("{0} : A type ID should be set before a packet can be built.", GetType().Name);
 
             WriteHeader(ArrayLength - 8);
-            Seek(ArrayLength - 8).WriteString(SystemSettings.Default.OutgoingPacketFooter);
+            Seek(ArrayLength - 8).WriteString(WorldServer.Configuration.Network.PacketOutgoingFooter);
 
             return base.Build();
         }

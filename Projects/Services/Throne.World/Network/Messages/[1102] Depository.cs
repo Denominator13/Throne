@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using Throne.Framework.Network.Connectivity;
 using Throne.Framework.Network.Transmission;
 using Throne.World.Network.Handling;
-using Throne.World.Properties.Settings;
+using Throne.World.Properties;
 using Throne.World.Security;
 using Throne.World.Structures.Objects;
 using Throne.World.Structures.Storage;
@@ -96,7 +94,7 @@ namespace Throne.World.Network.Messages
             if (!Enum.IsDefined(typeof (DepositoryType), _activeType))
                 throw new ModerateViolation("Player attempted to interact with a non-existant depository type.");
 
-            var chr = client.Character;
+            Character chr = client.Character;
             ItemDepository depo;
             if (!chr.Depositories[_activeType].TryGetValue(_depositoryId, out depo))
                 return;
@@ -107,12 +105,12 @@ namespace Throne.World.Network.Messages
                     client.Send(depo.DepositoryInformationArray(_activeType, _depositoryId));
                     break;
                 case DepositoryAction.ShowItem:
-                    var item = chr.GetItem(_itemId);
+                    Item item = chr.GetItem(_itemId);
                     if (item)
                         chr.MoveToDepository(_activeType, _depositoryId, item);
                     else client.Send("No such item.");
-                        break;
-                    case DepositoryAction.WithdrawItem:
+                    break;
+                case DepositoryAction.WithdrawItem:
                     if (chr.MoveFromDepository(_activeType, _depositoryId, _itemId))
                         client.Send(this);
                     break;

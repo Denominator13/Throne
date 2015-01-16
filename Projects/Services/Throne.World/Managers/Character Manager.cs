@@ -14,12 +14,12 @@ namespace Throne.World
 {
     public sealed class CharacterManager : SingletonActor<CharacterManager>
     {
-        private readonly LogProxy _log;
+        private readonly Logger _log;
         private readonly SerialGenerator _serialGenerator;
 
         private CharacterManager()
         {
-            _log = new LogProxy("CharacterManager");
+            _log = new Logger("CharacterManager");
 
             SerialGeneratorManager.Instance.GetGenerator(typeof (CharacterRecord).Name, WorldObject.PlayerIdMin,
                 WorldObject.PlayerIdMax, ref _serialGenerator);
@@ -30,7 +30,7 @@ namespace Throne.World
             var record = new CharacterRecord
             {
                 Guid = _serialGenerator.Next(),
-                OwnerGuid = client.AccountData.Guid,
+                OwnerGuid = client.AccountData.UserGuid,
                 Name = name,
                 CurrentJob = job,
                 Level = 1,
@@ -55,7 +55,7 @@ namespace Throne.World
         public CharacterRecord FindCharacterRecord(WorldClient client)
         {
             return WorldServer.Instance.WorldDbContext.Find<CharacterRecord>(
-                c => c.OwnerGuid == client.AccountData.Guid).FirstOrDefault();
+                c => c.OwnerGuid == client.AccountData.UserGuid).FirstOrDefault();
         }
 
         public Character InitiaizeCharacter(WorldClient client, CharacterRecord record)

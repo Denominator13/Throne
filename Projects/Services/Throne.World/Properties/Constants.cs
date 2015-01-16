@@ -1,6 +1,5 @@
 ﻿using Throne.World.Network;
 using Throne.World.Network.Messages;
-using Throne.World.Properties.Settings;
 
 namespace Throne.World.Properties
 {

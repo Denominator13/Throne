@@ -1,5 +1,5 @@
 ﻿using Throne.Framework;
-using Throne.World.Properties.Settings;
+using Throne.World.Properties;
 using Throne.World.Scripting.Scripts;
 using Throne.World.Structures.Travel;
 using Throne.World.Structures.World;

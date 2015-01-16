@@ -97,20 +97,47 @@ namespace Throne.Login.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Establishing connection with {0} on {1}.
+        ///   Looks up a localized string similar to The IP address provided in {0} is invalid..
         /// </summary>
-        internal static string SMSG_IPCAuthDeviceConnection {
+        internal static string SMSG_HostInvalid {
             get {
-                return ResourceManager.GetString("SMSG_IPCAuthDeviceConnection", resourceCulture);
+                return ResourceManager.GetString("SMSG_HostInvalid", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Starting Account Service on {0}.
+        ///   Looks up a localized string similar to Contacting {0} service..
         /// </summary>
-        internal static string SMSG_IPCAuthDeviceStartup {
+        internal static string SMSG_IPCDeviceConnect {
             get {
-                return ResourceManager.GetString("SMSG_IPCAuthDeviceStartup", resourceCulture);
+                return ResourceManager.GetString("SMSG_IPCDeviceConnect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Established a connection with {0} service..
+        /// </summary>
+        internal static string SMSG_IPCDeviceConnected {
+            get {
+                return ResourceManager.GetString("SMSG_IPCDeviceConnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Starting {0} service..
+        /// </summary>
+        internal static string SMSG_IPCDeviceStart {
+            get {
+                return ResourceManager.GetString("SMSG_IPCDeviceStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The {0} service was started..
+        /// </summary>
+        internal static string SMSG_IPCDeviceStarted {
+            get {
+                return ResourceManager.GetString("SMSG_IPCDeviceStarted", resourceCulture);
             }
         }
         
@@ -138,6 +165,15 @@ namespace Throne.Login.Properties {
         internal static string SMSG_PacketFooterInvalid {
             get {
                 return ResourceManager.GetString("SMSG_PacketFooterInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The port provided in {0} is invalid..
+        /// </summary>
+        internal static string SMSG_PortInvalid {
+            get {
+                return ResourceManager.GetString("SMSG_PortInvalid", resourceCulture);
             }
         }
         

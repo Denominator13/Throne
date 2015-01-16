@@ -1,17 +1,11 @@
 ﻿using System.Collections.Generic;
 using FluentNHibernate;
+using Throne.Framework.Persistence;
 
 namespace Throne.Login.Records.Implementations
 {
-    using Framework.Persistence;
-
     public sealed class AccountDatabaseContext : GameDatabaseContext
     {
-        public AccountDatabaseContext(DatabaseType dbType, string connStr)
-            : base(dbType, connStr)
-        {
-        }
-
         protected override IEnumerable<IMappingProvider> CreateMappings()
         {
             yield return new AccountMapping();

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Throne.Framework;
 using Throne.Framework.Threading.Actors;
-using Throne.World.Properties.Settings;
+using Throne.World.Properties;
 
 namespace Throne.World.Structures.Objects
 {

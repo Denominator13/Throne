@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
 using Throne.Framework.Logging;
 using Throne.Framework.Threading;
 using Throne.World.Database.Records;
-using Throne.World.Properties.Settings;
+using Throne.World.Properties;
 using Throne.World.Structures.Objects;
 using Throne.World.Structures.World;
 
@@ -16,17 +15,23 @@ namespace Throne.World
 {
     public sealed class WorldManager : SingletonActor<WorldManager>
     {
-        private WorldManager()
-        {
-            _static = new ConcurrentDictionary<uint, Map>();
-            Log = new LogProxy("WorldManager");
-        }
         public const string SystemRoot = "system/";
         private const string MapRoot = SystemRoot + "map/";
         private const string MapIndexPath = MapRoot + "GameMap.dat";
-        public readonly LogProxy Log;
+        public readonly Logger Log;
 
         private readonly ConcurrentDictionary<UInt32, Map> _static;
+
+        private WorldManager()
+        {
+            _static = new ConcurrentDictionary<uint, Map>();
+            Log = new Logger("WorldManager");
+        }
+
+        public Int32 Count
+        {
+            get { return _static.Count; }
+        }
 
         public void InitDb()
         {
@@ -98,7 +103,7 @@ namespace Throne.World
             if (_static.TryGetValue(StaticId, out map)) return map;
 
             //map was not in memory, load it
-            var record = Instance.LoadSingle(StaticId);
+            MapInfoRecord record = Instance.LoadSingle(StaticId);
             if (record != null) // was the map in the database?
                 _static.TryAdd(StaticId, map = new Map(record));
 
@@ -117,11 +122,6 @@ namespace Throne.World
         {
             return
                 WorldServer.Instance.WorldDbContext.Find<MapInfoRecord>(record => record.MapId == Id).SingleOrDefault();
-        }
-
-        public Int32 Count
-        {
-            get { return _static.Count; }
         }
 
         public Character GetCharacter(String name)

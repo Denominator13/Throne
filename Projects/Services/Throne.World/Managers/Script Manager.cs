@@ -9,7 +9,7 @@ using Throne.Framework.Logging;
 using Throne.Framework.Runtime;
 using Throne.Framework.Threading;
 using Throne.Framework.Utilities;
-using Throne.World.Properties.Settings;
+using Throne.World.Properties;
 using Throne.World.Scripting;
 using Throne.World.Scripting.Compiler;
 using Throne.World.Scripting.Scripts;
@@ -23,7 +23,7 @@ namespace Throne.World
         private const string SystemIndexRoot = "system/scripts/";
         private const string IndexPath = SystemIndexRoot + "scripts.txt";
 
-        public readonly LogProxy Log = new LogProxy("ScriptManager");
+        public readonly Logger Log = new Logger("ScriptManager");
 
         private readonly CSharpCompiler _compiler;
 
@@ -71,7 +71,7 @@ namespace Throne.World
         {
             ClearScriptContainers();
 
-            Log.Info(StrRes.SMSG_ScriptLoad);
+            Log.Status(StrRes.SMSG_ScriptLoad);
 
             if (!File.Exists(IndexPath))
             {

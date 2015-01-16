@@ -15,13 +15,14 @@ namespace Throne.Framework.Network.Handling
         where TPacket : Packet
         where THandler : PacketHandlerBase
     {
-        private static readonly Logger Log = new Logger("PacketPropagatorBase");
+        private readonly Logger Log;
 
         private readonly ConcurrentDictionary<Int16, THandler> _handlers =
             new ConcurrentDictionary<Int16, THandler>();
 
         protected PacketPropagatorBase()
         {
+            Log = new Logger(GetType().Name);
             foreach (Assembly asm in AppDomain.CurrentDomain.GetAssemblies())
                 CacheHandlers(asm);
             Log.Info("{0} Packet Handler classes cached.", _handlers.Count);
@@ -31,15 +32,16 @@ namespace Throne.Framework.Network.Handling
         {
             dynamic handler = GetHandler(typeId);
 
-            Log.Debug(
-                "{0}\n{1}/{2}:{3}\t{4}\n{5}",
-                client,
-                typeId.ToString("X2", CultureInfo.InvariantCulture),
-                typeId,
-                ((PacketTypes) typeId),
-                length,
-                BitConverter.ToString(payload).Replace("-", " ").WordWrap(48)
-                );
+            if (LogManager.LogPackets)
+                Log.Debug(
+                    "{0}\n{1}/{2}:{3}\t{4}\n{5}",
+                    client,
+                    typeId.ToString("X2", CultureInfo.InvariantCulture),
+                    typeId,
+                    ((PacketTypes)typeId),
+                    length,
+                    BitConverter.ToString(payload).Replace("-", " ").WordWrap(48)
+                    );
 
             if (handler == null) return;
 
@@ -64,7 +66,7 @@ namespace Throne.Framework.Network.Handling
                 var attr = ReflectionExtensions.GetCustomAttribute<TAttribute>(type);
                 if (attr == null) continue;
 
-                Type parent = typeof (TPacket);
+                Type parent = typeof(TPacket);
                 if (!type.IsAssignableTo(parent))
                 {
                     Log.Error("{0} classes must inherit from {1}", attr, parent);
@@ -72,7 +74,7 @@ namespace Throne.Framework.Network.Handling
                 }
 
                 ConstructorInfo ctor = type.GetConstructor(BindingFlags.Instance | BindingFlags.Public, null,
-                    new[] {typeof (Byte[])}, null);
+                    new[] { typeof(Byte[]) }, null);
                 if (ctor == null)
                 {
                     Log.Error("{0} needs a public instance constructor with one type argument as a byte array.",
@@ -83,7 +85,7 @@ namespace Throne.Framework.Network.Handling
                 Enum typeId = attr.PacketTypeId;
                 var handler = (THandler)Activator.CreateInstance(typeof(THandler), ctor, typeId, attr.Permission ?? typeof(ConnectedPermission));
 
-                AddHandler(((IConvertible) typeId).ToInt16(null), handler);
+                AddHandler(((IConvertible)typeId).ToInt16(null), handler);
             }
         }
 

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Throne.World.Properties.Settings;
+using Throne.World.Properties;
 using Throne.World.Structures.Objects;
 using Throne.World.Structures.Travel;
 using Throne.World.Structures.World;

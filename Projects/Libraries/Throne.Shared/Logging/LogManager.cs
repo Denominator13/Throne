@@ -1,78 +1,129 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.Contracts;
 using System.Globalization;
-using System.Text;
-using Throne.Framework.Logging.Loggers;
+using System.IO;
 
 namespace Throne.Framework.Logging
 {
+    [Flags]
+    public enum LogType
+    {
+        Info = 0x1,
+        Warning = 0x2,
+        Error = 0x4,
+        Debug = 0x8,
+        Status = 0x10,
+        Exception = 0x20,
+        NotImplemented = 0x40,
+        None = 0x80
+    }
+
     /// <summary>
-    ///     Takes care of all logging in the entire source base.
+    ///     Takes care of command line and file logging in the entire source base.
     ///     Do not use this class directly (except for debug logging); use LogProxy objects instead.
     /// </summary>
     public static class LogManager
     {
-        private static readonly List<ILogger> Loggers = new List<ILogger>
+        private static readonly object Sync = new object();
+
+        public static Boolean ClTimestamps { get; set; }
+        public static Boolean ClColorize { get; set; }
+        public static Boolean FileLogging { get; set; }
+        public static Boolean ArchiveLogFiles { get; set; }
+        public static Boolean LogPackets { get; set; }
+
+        public static LogType Hide { get; set; }
+
+        public static void Progress(Logger source, int current, int max)
         {
-            // TODO: Make this more customizable.
-            new ConsoleLogger()
-        };
+            float donePercent = (100f/max*current);
+            var done = (int) System.Math.Ceiling(20f/max*current);
 
-        private static readonly StringBuilder Builder = new StringBuilder();
-        private static readonly object Lock = new object();
-
-        public static void AddLogger(ILogger logger)
-        {
-            Contract.Requires(logger != null);
-
-            Loggers.Add(logger);
+            Write(LogType.Status, source, false,
+                "[" + ("".PadRight(done, '#') + "".PadLeft(20 - done, '.')) + "] {0,5}%\r",
+                donePercent.ToString("0.0", CultureInfo.InvariantCulture));
+            if (donePercent == 100.00)
+                WriteLine();
         }
 
-        private static string PrepareForOutput(string source, string logString, params object[] args)
+        public static void WriteLine(LogType level, Logger source, string format, params object[] args)
         {
-            Builder.Append("[");
-            Builder.Append(source);
-            Builder.Append("] ");
-            Builder.AppendFormat(CultureInfo.InvariantCulture, logString, args);
-
-            string result = Builder.ToString();
-            Contract.Assume(!string.IsNullOrEmpty(result));
-            Builder.Clear();
-
-            return result;
+            Write(level, source, format + Environment.NewLine, args);
         }
 
-        internal static void Information(string source, string logString, params object[] args)
+        public static void WriteLine()
         {
-            lock (Lock)
-                foreach (ILogger log in Loggers)
-                    log.WriteInformation(PrepareForOutput(source, logString, args));
+            WriteLine(LogType.None, null, "");
         }
 
-        internal static void Warning(string source, string logString, params object[] args)
+        public static void Write(LogType level, string format, params object[] args)
         {
-            lock (Lock)
-                foreach (ILogger log in Loggers)
-                    log.WriteWarning(PrepareForOutput(source, logString, args));
+            Write(level, null, true, format, args);
         }
 
-        internal static void Error(string source, string logString, params object[] args)
+        public static void Write(LogType level, Logger source, string format, params object[] args)
         {
-            lock (Lock)
-                foreach (ILogger log in Loggers)
-                    log.WriteError(PrepareForOutput(source, logString, args));
+            Write(level, source, true, format, args);
         }
 
-        [Conditional("DEBUG")]
-        public static void Debug(string logString, params object[] args)
+        private static void Write(LogType level, Logger source, bool toFile, string format, params object[] args)
         {
-            Contract.Requires(logString != null);
-            Contract.Requires(args != null);
+            lock (Sync)
+            {
+                if (!Hide.HasFlag(level))
+                {
+                    if (ClTimestamps && toFile)
+                        Console.Write(DateTime.Now.ToString("T"));
 
-            lock (Lock)
-                Console.WriteLine(logString, args);
+                    if (ClColorize)
+                        switch (level)
+                        {
+                            case LogType.Info:
+                                Console.ForegroundColor = ConsoleColor.White;
+                                break;
+                            case LogType.Warning:
+                                Console.ForegroundColor = ConsoleColor.Yellow;
+                                break;
+                            case LogType.Error:
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                break;
+                            case LogType.Debug:
+                                Console.ForegroundColor = ConsoleColor.Cyan;
+                                break;
+                            case LogType.Status:
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                break;
+                            case LogType.Exception:
+                                Console.ForegroundColor = ConsoleColor.DarkRed;
+                                break;
+                            case LogType.NotImplemented:
+                                Console.ForegroundColor = ConsoleColor.DarkGray;
+                                break;
+                        }
+
+                    if (source)
+                        Console.Write("[{0}]", source.Name);
+                    else if (level != LogType.None)
+                        Console.Write("[{0}]", level);
+
+                    Console.ForegroundColor = ConsoleColor.Gray;
+
+                    if (level != LogType.None)
+                        Console.Write(" ");
+
+                    Console.Write(format, args);
+                }
+
+                if (!source || !toFile || !FileLogging) return;
+                if (string.IsNullOrEmpty(source.LogFile)) return;
+                using (var file = new StreamWriter(source.LogFile, true))
+                {
+                    file.Write(DateTime.Now + " ");
+                    if (level != LogType.None)
+                        file.Write("[{0}] - ", level);
+                    file.Write(format, args);
+                    file.Flush();
+                }
+            }
         }
     }
 }

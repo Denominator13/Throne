@@ -175,6 +175,12 @@
     <Compile Include="Commands\ICommandUser.cs" />
     <Compile Include="Commands\System\ExitCommand.cs" />
     <Compile Include="Commands\System\HelpCommand.cs" />
+    <Compile Include="Configuration\BaseConfiguration.cs" />
+    <Compile Include="Configuration\ConfigurationFile.cs" />
+    <Compile Include="Configuration\Files\Persistence.cs" />
+    <Compile Include="Configuration\Files\Logging.cs" />
+    <Compile Include="Configuration\Files\Services.cs" />
+    <Compile Include="Configuration\Interfaces\INetworkConfiguration.cs" />
     <Compile Include="Exceptions\ConfigurationValueException.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Cryptography\CAST5.cs" />
@@ -191,10 +197,8 @@
     <Compile Include="Extensions\Extensions.Misc.cs" />
     <Compile Include="Extensions\Extensions.Networking.cs" />
     <Compile Include="Extensions\Extensions.Runtime.cs" />
-    <Compile Include="Logging\ILogger.cs" />
-    <Compile Include="Logging\Loggers\ConsoleLogger.cs" />
     <Compile Include="Logging\LogManager.cs" />
-    <Compile Include="Logging\LogProxy.cs" />
+    <Compile Include="Logging\Logger.cs" />
     <Compile Include="Math\BigInteger.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -249,11 +253,6 @@
     <Compile Include="Services\DuplexServiceClient.cs" />
     <Compile Include="Services\IpcDevice.cs" />
     <Compile Include="Services\ServiceHost.cs" />
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
     <Compile Include="Threading\ActorApplication.cs" />
     <Compile Include="Network\NetworkApplication.cs" />
     <Compile Include="Reflection\ReflectionExtensions.cs" />
@@ -269,6 +268,7 @@
     <Compile Include="Threading\Actors\ActorThread.cs" />
     <Compile Include="Threading\IWaitable.cs" />
     <Compile Include="Threading\SingletonActor.cs" />
+    <Compile Include="Utilities\Cli.cs" />
     <Compile Include="Utilities\FileReader.cs" />
     <Compile Include="Utilities\RandomProvider.cs" />
   </ItemGroup>
@@ -291,11 +291,6 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
     <None Include="Properties\Throne.snk" />
   </ItemGroup>
   <ItemGroup />

@@ -50,7 +50,7 @@ namespace Throne.Login.Records
 
         public override void Update()
         {
-            AuthServer.Instance.AccountDbContext.Update(this);
+            LoginServer.Instance.AccountDbContext.Update(this);
         }
     }
 

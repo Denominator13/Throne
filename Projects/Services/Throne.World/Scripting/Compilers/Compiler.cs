@@ -6,7 +6,7 @@ namespace Throne.World.Scripting.Compiler
 {
     public abstract class Compiler
     {
-        protected readonly LogProxy Log = new LogProxy("ScriptCompiler");
+        protected readonly Logger Log = new Logger("ScriptCompiler");
 
         /// <summary>
         /// Compiles script or fetches it from cache.

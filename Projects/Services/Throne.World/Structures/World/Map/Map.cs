@@ -10,7 +10,7 @@ using Throne.Framework.Exceptions;
 using Throne.Framework.Logging;
 using Throne.Framework.Threading.Actors;
 using Throne.World.Database.Records;
-using Throne.World.Properties.Settings;
+using Throne.World.Properties;
 using Throne.World.Scripting.Scripts;
 using Throne.World.Structures.Objects;
 using Throne.World.Structures.Objects.Actors;

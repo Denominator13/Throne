@@ -12,7 +12,7 @@ namespace Throne.Login.Accounts
 {
     public sealed class AccountManager : SingletonActor<AccountManager>
     {
-        private static readonly LogProxy _log = new LogProxy("AccountManager");
+        private static readonly Logger _log = new Logger("AccountManager");
 
         private readonly List<Account> _accounts = new List<Account>();
 
@@ -26,7 +26,7 @@ namespace Throne.Login.Accounts
             _log.Info("Loading accounts...");
             _accounts.Clear();
 
-            IEnumerable<AccountRecord> accounts = AuthServer.Instance.AccountDbContext.FindAll<AccountRecord>();
+            IEnumerable<AccountRecord> accounts = LoginServer.Instance.AccountDbContext.FindAll<AccountRecord>();
             foreach (Account acc in accounts.Select(account => new Account(account)))
             {
                 if (setOffline)

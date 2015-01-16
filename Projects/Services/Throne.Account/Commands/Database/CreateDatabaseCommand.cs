@@ -26,7 +26,7 @@ namespace Throne.Login.Commands.Database
 
             char answer = Console.ReadLine().ToUpper(CultureInfo.InvariantCulture).ToCharArray().FirstOrDefault();
             if (answer == 'Y')
-                AuthServer.Instance.AccountDbContext.PostAsync(x => x.Schema.Create());
+                LoginServer.Instance.AccountDbContext.PostAsync(x => x.Schema.Create());
         }
     }
 }

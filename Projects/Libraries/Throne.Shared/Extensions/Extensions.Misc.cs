@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
 using JetBrains.Annotations;
 
 namespace Throne.Framework
@@ -25,6 +26,93 @@ namespace Throne.Framework
         public static bool Null(this UIntPtr ptr)
         {
             return ptr == UIntPtr.Zero;
+        }
+
+        public static Color Lerp(this Color colour, Color to, float amount)
+        {
+            float sr = colour.R, sg = colour.G, sb = colour.B;
+            float er = to.R, eg = to.G, eb = to.B;
+            byte r = (byte)sr.Lerp(er, amount),
+                 g = (byte)sg.Lerp(eg, amount),
+                 b = (byte)sb.Lerp(eb, amount);
+            return Color.FromArgb(r, g, b);
+        }
+
+        public static float Lerp(this float start, float end, float amount)
+        {
+            float difference = end - start;
+            float adjusted = difference * amount;
+            return start + adjusted;
+        }
+
+        public static string WordWrap(this string str, int width)
+        {
+            int pos, next;
+            var sb = new StringBuilder();
+
+            // Lucidity check
+            if (width < 1)
+                return str;
+
+            // Parse each line of text
+            for (pos = 0; pos < str.Length; pos = next)
+            {
+                // Find end of line
+                int eol = str.IndexOf(Environment.NewLine, pos);
+
+                if (eol == -1)
+                    next = eol = str.Length;
+                else
+                    next = eol + Environment.NewLine.Length;
+
+                // Copy this line of text, breaking into smaller lines as needed
+                if (eol > pos)
+                {
+                    do
+                    {
+                        int len = eol - pos;
+
+                        if (len > width)
+                            len = BreakLine(str, pos, width);
+
+                        sb.Append(str, pos, len);
+                        sb.Append(Environment.NewLine);
+
+                        // Trim whitespace following break
+                        pos += len;
+
+                        while (pos < eol && Char.IsWhiteSpace(str[pos]))
+                            pos++;
+
+                    } while (eol > pos);
+                }
+                else sb.Append(Environment.NewLine); // Empty line
+            }
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Locates position to break the given line so as to avoid
+        /// breaking words.
+        /// </summary>
+        /// <param name="text">String that contains line of text</param>
+        /// <param name="pos">Index where line of text starts</param>
+        /// <param name="max">Maximum line length</param>
+        /// <returns>The modified line length</returns>
+        public static int BreakLine(this string text, int pos, int max)
+        {
+            // Find last whitespace in line
+            int i = max - 1;
+            while (i >= 0 && !Char.IsWhiteSpace(text[pos + i]))
+                i--;
+            if (i < 0)
+                return max; // No whitespace found; break at maximum length
+            // Find start of whitespace
+            while (i >= 0 && Char.IsWhiteSpace(text[pos + i]))
+                i--;
+            // Return length of text before whitespace
+            return i + 1;
         }
 
         public static string ToHexString(this IntPtr pointer)

@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using Throne.Framework.Commands;
 using Throne.Framework.Security.Permissions;
-using Throne.World.Properties.Settings;
+using Throne.World.Properties;
 
 namespace Throne.World.Commands.Database
 {

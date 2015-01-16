@@ -1,6 +1,6 @@
 ﻿using System;
 using Throne.Framework;
-using Throne.World.Properties.Settings;
+using Throne.World.Properties;
 using Throne.World.Security;
 using Throne.World.Structures;
 using Throne.World.Structures.Objects;

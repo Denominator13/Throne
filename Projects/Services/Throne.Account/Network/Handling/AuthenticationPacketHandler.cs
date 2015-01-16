@@ -12,9 +12,9 @@ namespace Throne.Login.Network.Handling
         {
         }
 
-        public void Invoke(AuthenticationClient client, params object[] param)
+        public void Invoke(LoginClient client, params object[] param)
         {
-            var processor = (AuthenticationPacket)Constructor.Invoke(param);
+            var processor = (LoginPacket)Constructor.Invoke(param);
 
             if (processor.Read(client))
                 processor.Handle(client);

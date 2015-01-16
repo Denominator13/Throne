@@ -3,7 +3,7 @@ using Throne.Framework.Network.Transmission;
 
 namespace Throne.Login.Network.Messages
 {
-    public sealed class AuthenticationAction : AuthenticationPacket
+    public sealed class AuthenticationAction : LoginPacket
     {
         public enum Type
         {

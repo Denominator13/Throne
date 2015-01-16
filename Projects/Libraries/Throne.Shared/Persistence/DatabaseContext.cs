@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using FluentNHibernate;
@@ -9,6 +8,8 @@ using FluentNHibernate.Cfg.Db;
 using FluentNHibernate.Conventions;
 using NHibernate;
 using NHibernate.Linq;
+using Throne.Framework.Configuration.Files;
+using Throne.Framework.Logging;
 using Throne.Framework.Persistence.Schema;
 using Throne.Framework.Threading.Actors;
 
@@ -16,9 +17,10 @@ namespace Throne.Framework.Persistence
 {
     public abstract class DatabaseContext : Actor<DatabaseContext>
     {
-        protected DatabaseContext(DatabaseType type, string connString)
+        public readonly Logger Log;
+        protected DatabaseContext()
         {
-            Configure(type, connString);
+            Log = new Logger(GetType().Name);
         }
 
         protected internal NHibernate.Cfg.Configuration Configuration { get; private set; }
@@ -27,14 +29,6 @@ namespace Throne.Framework.Persistence
 
         public SchemaInfo Schema { get; private set; }
 
-        [ContractInvariantMethod]
-        private void Invariant()
-        {
-            Contract.Invariant(SessionFactory != null);
-            Contract.Invariant(Schema != null);
-            Contract.Invariant(Configuration != null);
-        }
-
         protected override void Dispose(bool disposing)
         {
             SessionFactory.Dispose();
@@ -42,13 +36,8 @@ namespace Throne.Framework.Persistence
             base.Dispose(disposing);
         }
 
-        [SuppressMessage("Microsoft.Maintainability", "CA1502", Justification = "Switch statements are not that evil..."
-            )]
         private static IPersistenceConfigurer CreateConfiguration(DatabaseType type, string connString)
         {
-            Contract.Requires(!string.IsNullOrEmpty(connString));
-            Contract.Ensures(Contract.Result<IPersistenceConfigurer>() != null);
-
             IPersistenceConfigurer config;
 
             switch (type)
@@ -93,10 +82,10 @@ namespace Throne.Framework.Persistence
         /// </summary>
         /// <param name="dbType">The type of SQL server to connect to.</param>
         /// <param name="connString">The connection string to be used to establish a connection.</param>
-        private void Configure(DatabaseType dbType, string connString)
+        public void Configure(PersistenceConfigFile cfg)
         {
             FluentConfiguration fluent = Fluently.Configure();
-            fluent.Database(CreateConfiguration(dbType, connString));
+            fluent.Database(CreateConfiguration(cfg.DatabaseType, cfg.ConnectionString));
 
             foreach (Type mappingType in CreateMappings().Select(mapping => mapping.GetType()))
             {
@@ -125,8 +114,6 @@ namespace Throne.Framework.Persistence
 
         protected virtual IEnumerable<IConvention> CreateConventions()
         {
-            Contract.Ensures(Contract.Result<IEnumerable<IConvention>>() != null);
-
             yield break;
         }
 
@@ -136,8 +123,6 @@ namespace Throne.Framework.Persistence
         /// <returns>A unit-of-work session which should be disposed ASAP.</returns>
         protected ISession CreateSession()
         {
-            Contract.Ensures(Contract.Result<ISession>() != null);
-
             ISession session = SessionFactory.OpenSession();
             Contract.Assume(session != null);
             return session;
@@ -165,8 +150,6 @@ namespace Throne.Framework.Persistence
         /// <param name="itemsToSave">The entities to add.</param>
         public void Commit(IEnumerable<object> itemsToSave)
         {
-            Contract.Requires(itemsToSave != null);
-
             using (ISession session = CreateSession())
             {
                 using (session.BeginTransaction())
@@ -201,8 +184,6 @@ namespace Throne.Framework.Persistence
         /// <param name="itemsToSave">The entities to update.</param>
         public void Update(IEnumerable<object> itemsToSave)
         {
-            Contract.Requires(itemsToSave != null);
-
             using (ISession session = CreateSession())
             {
                 using (session.BeginTransaction())
@@ -221,8 +202,6 @@ namespace Throne.Framework.Persistence
         /// <param name="item">The entity to delete.</param>
         public void Delete(object item)
         {
-            Contract.Requires(item != null);
-
             using (ISession session = CreateSession())
             {
                 using (session.BeginTransaction())
@@ -239,8 +218,6 @@ namespace Throne.Framework.Persistence
         /// <param name="itemsToDelete">The entities to delete.</param>
         public void Delete(IEnumerable<object> itemsToDelete)
         {
-            Contract.Requires(itemsToDelete != null);
-
             using (ISession session = CreateSession())
             {
                 using (session.BeginTransaction())

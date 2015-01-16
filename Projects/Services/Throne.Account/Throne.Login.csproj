@@ -175,16 +175,13 @@
     <Reference Include="System.ServiceModel" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Network\AuthenticationClient.cs" />
-    <Compile Include="Network\AuthenticationPacket.cs" />
+    <Compile Include="Configuration\Files\Network.cs" />
+    <Compile Include="Configuration\LoginConfiguration.cs" />
+    <Compile Include="Network\LoginClient.cs" />
+    <Compile Include="Network\LoginPacket.cs" />
     <Compile Include="Network\Handling\AuthenticationPacketHandler.cs" />
     <Compile Include="Network\Handling\AuthenticationPacketHandlerAttribute.cs" />
     <Compile Include="Network\Handling\AuthenticationPacketPropagator.cs" />
-    <Compile Include="Properties\GlobalDefaults.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>GlobalDefaults.settings</DependentUpon>
-    </Compile>
     <Compile Include="Properties\StrRes1.Designer.cs">
       <DependentUpon>StrRes.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -195,7 +192,7 @@
     <Compile Include="Records\Implementations\Account Database Record.cs" />
     <Compile Include="Records\Implementations\Serial Generator.cs" />
     <Compile Include="Services\AccountService.cs" />
-    <Compile Include="AuthServer.cs" />
+    <Compile Include="Login Server.cs" />
     <Compile Include="Account\Account.cs" />
     <Compile Include="Account\AccountManager.cs" />
     <Compile Include="Commands\Accounts\CreateAccountCommand.cs" />
@@ -206,7 +203,7 @@
     <Compile Include="Network\Messages\[1059] Authentication Cipher Seed.cs" />
     <Compile Include="Network\Messages\[1100] Remote Machine Identification.cs" />
     <Compile Include="Network\Messages\[1542] SRP6 Protocol Authentication Request.cs" />
-    <Compile Include="Properties\Program.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\SolutionInfo.cs" />
   </ItemGroup>
@@ -231,12 +228,7 @@
     <None Include="..\..\Shared\Throne.snk">
       <Link>Properties\Throne.snk</Link>
     </None>
-    <None Include="app.config" />
     <None Include="Properties\app.config" />
-    <None Include="Properties\GlobalDefaults.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>GlobalDefaults.Designer.cs</LastGenOutput>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\StrRes.resx">

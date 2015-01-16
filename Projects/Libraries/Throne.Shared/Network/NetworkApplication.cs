@@ -20,13 +20,7 @@ namespace Throne.Framework.Network
 
         public TcpServer Server { get; private set; }
         public abstract IPEndPoint EndPoint { get; }
-
-        public override void Start(string[] args)
-        {
-            base.Start(args);
-            Log.Info(StrRes.NetworkAppStarted.Interpolate(Process.GetCurrentProcess().MaxWorkingSet));
-        }
-
+        
         protected override void Dispose(bool disposing)
         {
             if (!IsDisposed)
@@ -44,7 +38,8 @@ namespace Throne.Framework.Network
 
         protected override void OnStop()
         {
-            Server.Stop();
+            if (Server != null)
+                Server.Stop();
         }
 
         protected abstract TcpServer CreateServer();

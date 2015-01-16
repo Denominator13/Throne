@@ -129,11 +129,20 @@
   <data name="SMSG_ConfigPersist" xml:space="preserve">
     <value>Configuring {0} persistance.</value>
   </data>
-  <data name="SMSG_IPCAuthDeviceConnection" xml:space="preserve">
-    <value>Establishing connection with {0} on {1}</value>
+  <data name="SMSG_HostInvalid" xml:space="preserve">
+    <value>The IP address provided in {0} is invalid.</value>
   </data>
-  <data name="SMSG_IPCAuthDeviceStartup" xml:space="preserve">
-    <value>Starting Account Service on {0}</value>
+  <data name="SMSG_IPCDeviceConnect" xml:space="preserve">
+    <value>Contacting {0} service.</value>
+  </data>
+  <data name="SMSG_IPCDeviceConnected" xml:space="preserve">
+    <value>Established a connection with {0} service.</value>
+  </data>
+  <data name="SMSG_IPCDeviceStart" xml:space="preserve">
+    <value>Starting {0} service.</value>
+  </data>
+  <data name="SMSG_IPCDeviceStarted" xml:space="preserve">
+    <value>The {0} service was started.</value>
   </data>
   <data name="SMSG_ListenHostInvalid" xml:space="preserve">
     <value>Invalid list host.</value>
@@ -143,6 +152,9 @@
   </data>
   <data name="SMSG_PacketFooterInvalid" xml:space="preserve">
     <value>Authentication packets contain no footer.</value>
+  </data>
+  <data name="SMSG_PortInvalid" xml:space="preserve">
+    <value>The port provided in {0} is invalid.</value>
   </data>
   <data name="SMSG_StartTCPListener" xml:space="preserve">
     <value>Starting {0} TCP server.</value>

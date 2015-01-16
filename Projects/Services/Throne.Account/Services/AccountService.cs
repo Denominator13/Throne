@@ -20,7 +20,7 @@ namespace Throne.Login.Services
         {
             var acc = GetAccount(session);
             if (!acc) return false;
-            if ((DateTime.Now - acc.LastLogin).Value.TotalSeconds > 2) return false;
+            if ((DateTime.Now - acc.LastLogin).Value.TotalSeconds > 4) return false;
             return acc.Password.GetHashCode() == password;
         }
 

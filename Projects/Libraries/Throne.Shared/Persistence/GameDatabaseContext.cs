@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using FluentNHibernate.Conventions;
 using Throne.Framework.Persistence.Conventions.Identity;
 using Throne.Framework.Persistence.Conventions.Naming;
@@ -10,12 +9,6 @@ namespace Throne.Framework.Persistence
 {
     public abstract class GameDatabaseContext : DatabaseContext
     {
-        protected GameDatabaseContext(DatabaseType type, string connString)
-            : base(type, connString)
-        {
-            Contract.Requires(!string.IsNullOrEmpty(connString));
-        }
-
         protected override sealed IEnumerable<IConvention> CreateConventions()
         {
             yield return new IdConvention();

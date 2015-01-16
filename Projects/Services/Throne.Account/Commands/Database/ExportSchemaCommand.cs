@@ -27,7 +27,7 @@ namespace Throne.Login.Commands.Database
                 return;
             }
 
-            AuthServer.Instance.AccountDbContext.PostAsync(x => x.Schema.Export(fileName));
+            LoginServer.Instance.AccountDbContext.PostAsync(x => x.Schema.Export(fileName));
         }
     }
 }

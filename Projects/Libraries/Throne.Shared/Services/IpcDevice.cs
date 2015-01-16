@@ -15,8 +15,6 @@ namespace Throne.Framework.Services
         public IpcDevice(Func<DuplexServiceClient<TService, TCallback>> clientCreator)
         {
             _creator = clientCreator;
-            _client = clientCreator();
-            _client.Open();
         }
 
         /// <summary>
@@ -41,7 +39,7 @@ namespace Throne.Framework.Services
             }
         }
 
-        private void Connect()
+        public void Connect()
         {
             _client = _creator();
             _client.Open();

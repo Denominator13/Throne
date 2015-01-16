@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Sockets;
 using JetBrains.Annotations;
+using Throne.Framework.Configuration.Interfaces;
 using Throne.Framework.Exceptions;
 using Throne.Framework.Network.Connectivity;
 using Throne.Framework.Network.Handling;
@@ -11,12 +12,11 @@ namespace Throne.Framework.Network.Communication
 {
     public sealed class TcpServer : Socket
     {
-        private readonly IPacketPropagator _propagator;
+        private IPacketPropagator _propagator;
 
-        public TcpServer(IPacketPropagator packetPropagator)
+        public TcpServer()
             : base(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp)
         {
-            _propagator = packetPropagator;
         }
 
         #region Server Information
@@ -54,52 +54,41 @@ namespace Throne.Framework.Network.Communication
         /// </summary>
         private NetFwHandler NetFw { get; set; }
 
+        public IPEndPoint EndPoint { get; private set; }
+
         public static event EventHandler<ConnectionEventArgs> ClientConnected;
         public static event EventHandler<ConnectionEventArgs> ClientDisconnected;
 
-        public void Start(
-            String name,
-            String outgoingFooter,
-            String incomingFooter,
-            IPEndPoint ipEndPoint,
-            Int32 backlog,
-            Int32 fwWatchSeconds = 10,
-            Int32 fwConnectionThreshold = 10,
-            Boolean noNagle = true,
-            Boolean keepAlive = true,
-            Boolean gracefulShutdown = true,
-            Boolean dontFragment = true,
-            Boolean reuseIpEndPoint = true)
+        public void Start(IPacketPropagator packetPropagator, INetworkConfiguration cfg)
         {
-            Name = name;
-            OutgoingFooter = outgoingFooter;
-            OutgoingFooterLength = (Int16) outgoingFooter.Length;
-            IncomingFooter = incomingFooter;
-            IncomingFooterLength = (Int16) incomingFooter.Length;
-            EndPoint = ipEndPoint;
+            _propagator = packetPropagator;
+            OutgoingFooter = cfg.PacketOutgoingFooter;
+            OutgoingFooterLength = (Int16) cfg.PacketOutgoingFooter.Length;
+            IncomingFooter = cfg.PacketIncomingFooter;
+            IncomingFooterLength = (Int16) cfg.PacketIncomingFooter.Length;
+            EndPoint = cfg.IpEndPoint;
 
-            NetFw = new NetFwHandler(fwWatchSeconds, fwConnectionThreshold);
+            NetFw = new NetFwHandler(cfg.FirewallSeconds, cfg.FirewallMaxConnections);
 
-            SetSocketOption(SocketOptionLevel.IP, SocketOptionName.DontFragment, dontFragment);
-            SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.NoDelay, noNagle);
-            SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, keepAlive);
-            SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, gracefulShutdown);
-            SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, reuseIpEndPoint);
+            SetSocketOption(SocketOptionLevel.IP, SocketOptionName.DontFragment, cfg.NoFragment);
+            SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.NoDelay, cfg.NoNagel);
+            SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, cfg.KeepAlive);
+            SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, cfg.GracefulDisconnect);
+            SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, cfg.ReuseEndpoint);
 
             Bind(EndPoint);
-            Listen(backlog);
+            Listen(cfg.Backlog);
 
             Accept(SocketAsyncEventArgsPool.Acquire(OnAccept));
         }
 
         public void Stop()
         {
-            Shutdown(SocketShutdown.Both);
+            if (IsBound)
+                Shutdown(SocketShutdown.Both);
             Close();
         }
 
-
-        public IPEndPoint EndPoint { get; private set; }
 
         private void Accept(SocketAsyncEventArgs accEa)
         {
@@ -134,8 +123,8 @@ namespace Throne.Framework.Network.Communication
                     sock.Terminate();
                     return;
                 }
-                
-                var passConnectEvent = ClientConnected;
+
+                EventHandler<ConnectionEventArgs> passConnectEvent = ClientConnected;
                 if (passConnectEvent != null)
                     passConnectEvent(this, new ConnectionEventArgs(sock, _propagator));
             }

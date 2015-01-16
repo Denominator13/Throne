@@ -9,12 +9,12 @@ namespace Throne.World
 {
     public sealed class ItemManager : SingletonActor<ItemManager>
     {
-        private readonly LogProxy _log;
+        private readonly Logger _log;
         private readonly SerialGenerator _serialGenerator;
 
         private ItemManager()
         {
-            _log = new LogProxy("ItemManager");
+            _log = new Logger("ItemManager");
 
             SerialGeneratorManager.Instance.GetGenerator(typeof (ItemRecord).Name, WorldObject.ItemIdMin,
                 WorldObject.ItemIdMax, ref _serialGenerator);

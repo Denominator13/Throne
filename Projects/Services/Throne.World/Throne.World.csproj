@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Throne.World</RootNamespace>
-    <AssemblyName>Throne.World</AssemblyName>
+    <AssemblyName>Throne.Test</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <CodeContractsAssemblyMode>1</CodeContractsAssemblyMode>
@@ -191,6 +191,9 @@
     <Compile Include="Commands\World\MapAttributeCommand.cs" />
     <Compile Include="Commands\World\MapInfoCommand.cs" />
     <Compile Include="Commands\World\WeatherCommand.cs" />
+    <Compile Include="Configuration\Files\Network.cs" />
+    <Compile Include="Configuration\Files\World.cs" />
+    <Compile Include="Configuration\WorldConfiguration.cs" />
     <Compile Include="Database\Implementations\Conventions\Naming\WorldClassNamingConvention.cs" />
     <Compile Include="Database\Records\Mail Record.cs" />
     <Compile Include="Managers\Character Manager.cs" />
@@ -260,16 +263,16 @@
     <Compile Include="Network\Messages\[1052] Client Authentication.cs" />
     <Compile Include="Network\Messages\[1004] Chat Message.cs" />
     <Compile Include="Network\WorldClient.cs" />
-    <Compile Include="Properties\Program.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Database\Records\Character Record.cs" />
     <Compile Include="Database\Implementations\Serial Generator.cs" />
     <Compile Include="Database\Implementations\World Database Context.cs" />
     <Compile Include="Database\Implementations\World Database Record.cs" />
     <Compile Include="Database\Records\Map Info Record.cs" />
-    <Compile Include="Properties\Settings\SystemSettings.Designer.cs">
+    <Compile Include="Properties\StrRes1.Designer.cs">
       <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>SystemSettings.settings</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StrRes.resx</DependentUpon>
     </Compile>
     <Compile Include="Scripting\Compilers\Compiler Errors.cs" />
     <Compile Include="Scripting\Compilers\Compiler.cs" />
@@ -317,11 +320,6 @@
     <Compile Include="Structures\Objects\Player Character\Character.cs" />
     <Compile Include="Structures\Objects\Player Character\Character.Properties.cs" />
     <Compile Include="Structures\Objects\Player Character\Character.Vision.cs" />
-    <Compile Include="Properties\Settings\EntitySettings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>EntitySettings.settings</DependentUpon>
-    </Compile>
     <Compile Include="Structures\Task Dialog\DialogPicture.cs" />
     <Compile Include="Structures\Travel\Jump.cs" />
     <Compile Include="Structures\Travel\Position.cs">
@@ -329,22 +327,12 @@
     </Compile>
     <Compile Include="Structures\Travel\Direction.cs" />
     <Compile Include="Structures\World\Enumerators.cs" />
-    <Compile Include="Event Manager.cs" />
-    <Compile Include="Properties\Settings\MapSettings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>MapSettings.settings</DependentUpon>
-    </Compile>
+    <Compile Include="Managers\Event Manager.cs" />
     <Compile Include="Structures\Travel\Directional Orientation.cs" />
     <Compile Include="Structures\Travel\Location.cs" />
     <Compile Include="Structures\World\Map\Map.Characters.cs" />
     <Compile Include="Structures\World\Map\Map.cs" />
     <Compile Include="Structures\World\Cell.cs" />
-    <Compile Include="Properties\Settings\StrRes1.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>StrRes.resx</DependentUpon>
-    </Compile>
     <Compile Include="Structures\World\Map\Map.Items.cs" />
     <Compile Include="Structures\World\Map\Map.Npcs.cs" />
     <Compile Include="World Server.cs" />
@@ -370,23 +358,10 @@
     <None Include="..\..\Shared\Throne.snk">
       <Link>Properties\Throne.snk</Link>
     </None>
-    <None Include="app.config" />
     <None Include="Properties\app.config" />
-    <None Include="Properties\Settings\SystemSettings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>SystemSettings.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="Properties\Settings\EntitySettings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>EntitySettings.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="Properties\Settings\MapSettings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>MapSettings.Designer.cs</LastGenOutput>
-    </None>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Properties\Settings\StrRes.resx">
+    <EmbeddedResource Include="Properties\StrRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>StrRes1.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>

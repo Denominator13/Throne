@@ -6,17 +6,17 @@ namespace Throne.Login.Records.Implementations
     {
         public virtual void Create()
         {
-            AuthServer.Instance.AccountDbContext.PostAsync(x => x.Commit(this));
+            LoginServer.Instance.AccountDbContext.PostAsync(x => x.Commit(this));
         }
 
         public virtual void Update()
         {
-            AuthServer.Instance.AccountDbContext.PostAsync(x => x.Update(this));
+            LoginServer.Instance.AccountDbContext.PostAsync(x => x.Update(this));
         }
 
         public virtual void Delete()
         {
-            AuthServer.Instance.AccountDbContext.PostAsync(x => x.Delete(this));
+            LoginServer.Instance.AccountDbContext.PostAsync(x => x.Delete(this));
         }
     }
 }

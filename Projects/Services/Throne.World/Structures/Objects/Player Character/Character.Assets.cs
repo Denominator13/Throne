@@ -4,7 +4,7 @@ using System.Linq;
 using Throne.Framework;
 using Throne.Framework.Network.Transmission.Stream;
 using Throne.World.Network.Messages;
-using Throne.World.Properties.Settings;
+using Throne.World.Properties;
 using Throne.World.Structures.Storage;
 
 namespace Throne.World.Structures.Objects

@@ -18,7 +18,7 @@ namespace Throne.Framework.Exceptions
         private static readonly SynchronizedCollection<ExceptionInfo> _exceptionList =
             new SynchronizedCollection<ExceptionInfo>();
 
-        private static readonly LogProxy _log = new LogProxy("ExceptionManager");
+        private static readonly Logger _log = new Logger("ExceptionManager");
 
         /// <summary>
         ///     Registers an exception that occurred.
@@ -26,8 +26,7 @@ namespace Throne.Framework.Exceptions
         /// <param name="ex">The exception that occurred.</param>
         public static void RegisterException(Exception ex)
         {
-            _log.Error("{0} caught:", ex.GetType().Name);
-            PrintException(ex);
+            _log.Exception(ex, ex.Message);
 
             var info = new ExceptionInfo(ex);
             _exceptionList.Add(info);
@@ -35,16 +34,6 @@ namespace Throne.Framework.Exceptions
             //var evnt = ExceptionOccurred;
             //if (evnt != null)
             //    evnt(null, new ExceptionEventArgs(info));
-        }
-
-        private static void PrintException(Exception ex)
-        {
-            _log.Error("Message: {0}", ex.Message);
-            _log.Error("Stack trace: {0}", ex.StackTrace);
-
-            Exception inner = ex.InnerException;
-            if (inner != null)
-                PrintException(inner);
         }
 
         /// <summary>

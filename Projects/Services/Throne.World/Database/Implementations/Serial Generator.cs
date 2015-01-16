@@ -99,12 +99,12 @@ namespace Throne.World.Database.Records.Implementations
 
     public sealed class SerialGeneratorManager : SingletonActor<SerialGeneratorManager>
     {
-        public readonly LogProxy Log;
+        public readonly Logger Log;
         private readonly List<SerialGenerator> _generators;
 
         private SerialGeneratorManager()
         {
-            Log = new LogProxy("SerialGenerator");
+            Log = new Logger("SerialGenerator");
             Log.Info("Loading serial generators...");
 
             _generators = new List<SerialGenerator>();

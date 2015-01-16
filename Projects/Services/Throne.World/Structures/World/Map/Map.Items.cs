@@ -6,7 +6,6 @@ using System.Threading;
 using Throne.Framework;
 using Throne.Framework.Threading.Actors;
 using Throne.World.Network.Messages;
-using Throne.World.Properties.Settings;
 using Throne.World.Structures.Objects;
 using Throne.World.Structures.Travel;
 
@@ -75,7 +74,7 @@ namespace Throne.World.Structures.World
             lock (ItemReadWrite)
                 result.AddRange(
                     _items.Values.Where(
-                        itm => itm.Location.Position.InRange(pos, MapSettings.Default.PlayerScreenRange)));
+                        itm => itm.Location.Position.InRange(pos, WorldServer.Configuration.World.PlayerScreenRange)));
             //Screen range differs from characters.. seems to be 20-22..
 
             return result;

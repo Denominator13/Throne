@@ -1,20 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Globalization;
 using Throne.Framework;
 using Throne.Framework.Commands;
 using Throne.Framework.Threading;
 using Throne.Framework.Threading.Actors;
 using Throne.World.Network.Messages;
-using Throne.World.Properties.Settings;
 
 namespace Throne.World
 {
     public sealed class ChatManager : SingletonActor<ChatManager>
     {
-        private static readonly char CommandPrefix = SystemSettings.Default.CommandPrefix;
-
         private Queue<ChatMessage> _broadcastQueue;
         private ActorTimer _broadcastTicker;
 
@@ -28,16 +24,17 @@ namespace Throne.World
         }
 
         /// <summary>
-        /// Handle chat messages.
-        /// TODO: Sanitize messages before echoing to other clients
+        ///     Handle chat messages.
+        ///     TODO: Sanitize messages before echoing to other clients
         /// </summary>
         /// <param name="msg"></param>
         public void ProcessChatMessage(ChatMessage msg)
         {
-            if (msg.Message.StartsWith(CommandPrefix.ToString(CultureInfo.InvariantCulture)))
+            if (msg.Message.StartsWith(WorldServer.Configuration.World.CommandPrefix))
             {
                 var arguments = new CommandArguments(msg.Message.ParseCommand(),
-                    msg.Message.Contains(new String(CommandPrefix, 2)));
+                    msg.Message.Contains(WorldServer.Configuration.World.CommandPrefix +
+                                         WorldServer.Configuration.World.CommandPrefix));
                 CommandManager.Instance.PostAsync(cm => cm.ExecuteCommand(arguments, msg.Client));
             }
             msg.Color = Color.Green;

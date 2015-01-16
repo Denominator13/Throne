@@ -9,11 +9,11 @@ namespace Throne.World.Scripting.Scripts
 {
     public abstract class ScriptBase : IDisposableResource, IAutoLoader, IScript
     {
-        protected LogProxy Log;
+        protected Logger Log;
 
         protected ScriptBase()
         {
-            Log = new LogProxy("{0}->{1}".Interpolate(GetType().BaseType.Name, GetType().Name));
+            Log = new Logger("{0}-{1}".Interpolate(GetType().BaseType.Name, GetType().Name));
         }
 
         /// <summary>
@@ -79,7 +79,6 @@ namespace Throne.World.Scripting.Scripts
                 EventInfo eventHandlerInfo = WorldServer.Instance.Events.GetType().GetEvent(attr.Event);
                 if (eventHandlerInfo == null)
                 {
-                    LogManager.Debug("AutoLoadEvents: Unknown event '{0}' on '{1}.{2}'.".Interpolate(attr.Event, type.Name, method.Name));
                     continue;
                 }
 
