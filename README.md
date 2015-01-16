@@ -24,6 +24,8 @@ Features
    - Asyncronous Sockets
    - WCF IPC
    - Actor based threading (one thread per core, one thread per actor, load balanced)
+   - File logging
+   - File configuration
 
 Getting Started
 ----
