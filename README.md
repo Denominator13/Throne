@@ -20,7 +20,7 @@ Features
  - C# Scripting (Scripts are linked into their own solutions)
  - Global OOP based commands (same commands can be used on console and ingame)
  - Extensive base library
-   - Fluent NHibernate
+   - Fluent NHibernate (Tuned for MySql, but can use almost any database with 1-2 changes)
    - Asyncronous Sockets
    - WCF IPC
    - Actor based threading (one thread per core, one thread per actor, load balanced)
