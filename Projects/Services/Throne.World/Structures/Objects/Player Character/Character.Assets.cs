@@ -129,6 +129,7 @@ namespace Throne.World.Structures.Objects
         public void EquipGearSlot(Item item, Item.Positions pos)
         {
             GearSlot slot = GetGearSlot(pos);
+            if (!slot.Empty) UnequipGearSlot(slot);
             if (!slot.Equip(item)) return;
 
             item.Position = pos;

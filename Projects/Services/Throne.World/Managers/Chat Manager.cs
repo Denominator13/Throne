@@ -30,11 +30,12 @@ namespace Throne.World
         /// <param name="msg"></param>
         public void ProcessChatMessage(ChatMessage msg)
         {
+            var test = WorldServer.Configuration.World.CommandPrefix +
+                       WorldServer.Configuration.World.CommandPrefix;
             if (msg.Message.StartsWith(WorldServer.Configuration.World.CommandPrefix))
             {
                 var arguments = new CommandArguments(msg.Message.ParseCommand(),
-                    msg.Message.Contains(WorldServer.Configuration.World.CommandPrefix +
-                                         WorldServer.Configuration.World.CommandPrefix));
+                    msg.Message.Contains(test));
                 CommandManager.Instance.PostAsync(cm => cm.ExecuteCommand(arguments, msg.Client));
             }
             msg.Color = Color.Green;

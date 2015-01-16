@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using Throne.Framework.Logging;
 using Throne.Framework.Threading;
+using Throne.World.Database.Client;
 using Throne.World.Database.Records.Implementations;
 using Throne.World.Records;
 using Throne.World.Structures.Objects;
@@ -11,6 +13,7 @@ namespace Throne.World
     {
         private readonly Logger _log;
         private readonly SerialGenerator _serialGenerator;
+        public static Dictionary<Int32, ItemType> ItemTypeStorage;
 
         private ItemManager()
         {
@@ -18,6 +21,12 @@ namespace Throne.World
 
             SerialGeneratorManager.Instance.GetGenerator(typeof (ItemRecord).Name, WorldObject.ItemIdMin,
                 WorldObject.ItemIdMax, ref _serialGenerator);
+        }
+
+        public void Load()
+        {
+            ClientDatabaseReader.Read("itemtype.dat", out ItemTypeStorage);
+            _log.Status("Item information loaded.");
         }
 
         public Item CreateItem(Character chr, Int32 type)
@@ -36,7 +45,6 @@ namespace Throne.World
 
             return item;
         }
-
         public ItemRecord CreateItemRecord(CharacterRecord cRecord, Int32 type, Byte craftLevel, Byte firstSlot, Byte secondSlot, Item.Positions position)
         {
             var record = new ItemRecord

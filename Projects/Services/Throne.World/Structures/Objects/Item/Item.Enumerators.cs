@@ -2,7 +2,7 @@
 {
     partial class Item
     {
-        public enum Color : byte
+        public enum Color
         {
             Black = 2,
             Orange = 3,

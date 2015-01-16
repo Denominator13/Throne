@@ -1,0 +1,2 @@
+Itemtype.dat requires itemtypesub.dat to be in this folder because of the requires "itemtypesub.dat" in the end of the file.
+When loading, itemtypesub will override items in itemtype.dat if there are duplicate type IDs.

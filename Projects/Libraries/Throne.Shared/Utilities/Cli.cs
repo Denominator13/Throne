@@ -21,7 +21,7 @@ namespace Throne.Framework.Utilities
             Console.ForegroundColor = ConsoleColor.Gray;
             Console.BackgroundColor = color;
             Console.WriteLine();
-            Console.Write(@"                  Built from contributions with the help of God                 ");
+            Console.Write(@"            Built from contributions with the help of God and Google            ");
             Console.WriteLine();
             Console.BackgroundColor = ConsoleColor.Black;
         }

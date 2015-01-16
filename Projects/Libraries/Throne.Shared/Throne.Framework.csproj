@@ -181,6 +181,7 @@
     <Compile Include="Configuration\Files\Logging.cs" />
     <Compile Include="Configuration\Files\Services.cs" />
     <Compile Include="Configuration\Interfaces\INetworkConfiguration.cs" />
+    <Compile Include="Cryptography\Client Database Cryptography.cs" />
     <Compile Include="Exceptions\ConfigurationValueException.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Cryptography\CAST5.cs" />
@@ -269,7 +270,9 @@
     <Compile Include="Threading\IWaitable.cs" />
     <Compile Include="Threading\SingletonActor.cs" />
     <Compile Include="Utilities\Cli.cs" />
-    <Compile Include="Utilities\FileReader.cs" />
+    <Compile Include="Utilities\File Reader\FileReader.cs" />
+    <Compile Include="Utilities\File Reader\IFileCryptography.cs" />
+    <Compile Include="Utilities\rand.cs" />
     <Compile Include="Utilities\RandomProvider.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -15,7 +15,6 @@ using Throne.Framework.Services.Account;
 using Throne.Framework.Threading.Actors;
 using Throne.World.Network.Exchange;
 using Throne.World.Network.Messages;
-using Throne.World.Records;
 using Throne.World.Structures.Objects;
 using TcpClient = Throne.Framework.Network.Communication.TcpClient;
 
@@ -100,7 +99,7 @@ namespace Throne.World.Network
                 SocketAsyncEventArgs sndSocketArgs = SocketAsyncEventArgsPool.Acquire(IOComplete);
 
                 sndSocketArgs.SetBuffer(
-                    StreamCipher != null ? StreamCipher.Encrypt(value, value.Length) : value, 
+                    StreamCipher != null ? StreamCipher.Encrypt(value, value.Length) : value,
                     0,
                     value.Length);
 

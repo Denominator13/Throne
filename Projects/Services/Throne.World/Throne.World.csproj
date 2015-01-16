@@ -194,6 +194,9 @@
     <Compile Include="Configuration\Files\Network.cs" />
     <Compile Include="Configuration\Files\World.cs" />
     <Compile Include="Configuration\WorldConfiguration.cs" />
+    <Compile Include="Database\Client\ClientDatabaseReader.cs" />
+    <Compile Include="Database\Client\Files\ItemType.cs" />
+    <Compile Include="Database\Client\IClientDatabase.cs" />
     <Compile Include="Database\Implementations\Conventions\Naming\WorldClassNamingConvention.cs" />
     <Compile Include="Database\Records\Mail Record.cs" />
     <Compile Include="Managers\Character Manager.cs" />

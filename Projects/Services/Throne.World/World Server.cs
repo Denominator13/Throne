@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using Throne.Framework;
 using Throne.Framework.Cryptography;
@@ -11,6 +13,7 @@ using Throne.Framework.Services;
 using Throne.Framework.Services.Account;
 using Throne.Framework.Utilities;
 using Throne.World.Configuration;
+using Throne.World.Database.Client;
 using Throne.World.Database.Records.Implementations;
 using Throne.World.Network;
 using Throne.World.Network.Handling;
@@ -62,11 +65,11 @@ namespace Throne.World
 
             InitiatePersistence(WorldDbContext = new WorldDatabaseContext(), Configuration.Persistence);
 
-            ScriptManager.Instance.Load();
-
             Info = ServerInfoManager.Instance.Get(WorldConfiguration.ServerName);
             LinkAccountService();
 
+            ItemManager.Instance.Load();
+            ScriptManager.Instance.Load();
 
             Log.Status("Configuring TCP server on {0}.", EndPoint);
             Server.Start(new WorldPacketPropagator(), Configuration.Network);
