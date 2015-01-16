@@ -24,15 +24,6 @@ Features
    - Asyncronous Sockets
    - WCF IPC
    - Actor based threading (one thread per core, one thread per actor, load balanced)
- - Conquer Implementations:
-   - Roles
-   - Maps
-   - Items (equip, inventory, map)
-   - Movement
-   - Limited chat support
-   - Users can see others (screening works)
-   - Limited NPC support (async dialogs, support for script hooking incoming)
-   - Inbox and mail
 
 Getting Started
 ----
