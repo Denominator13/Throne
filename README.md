@@ -41,7 +41,7 @@ Getting Started
 
 
 
-![Throne in action...](http://i.imgur.com/tZs4aeu.jpg)
+![Throne in action...](http://i.imgur.com/NJpXny3.png)
 
 
 
