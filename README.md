@@ -54,8 +54,8 @@ Credits/Contributers/References
 - Impulse
 - Smallxmac
 - InfamousNoone
-- Encore
-- WCell
+- Encore (Most of the framework of the project is built on Encore)
+- WCell (Lot of ideas from this project)
 - Anthrax
 
 Leave a message on [Chained2PVP](http://chained2pvp.com/topic/332-throne-project-development/) or [ElitePVPers](http://www.elitepvpers.com/forum/co2-pserver-guides-releases/3526603-release-project-development-throne.html) if you wish to contribute to the project or if you belong in the credits.
