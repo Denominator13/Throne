@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Throne.Framework;
 using Throne.Framework.Logging;
 using Throne.Framework.Threading;
 using Throne.World.Database.Client;
+using Throne.World.Database.Client.Files;
 using Throne.World.Database.Records.Implementations;
 using Throne.World.Records;
 using Throne.World.Structures.Objects;
@@ -11,13 +14,16 @@ namespace Throne.World
 {
     public sealed class ItemManager : SingletonActor<ItemManager>
     {
-        private readonly Logger _log;
+        public static Dictionary<Int32, ItemTemplate> Templates;
+        public static Dictionary<Int32, ItemCompositionBonus> ItemCompositionBonuses;
+        public static Dictionary<String, Int32> ItemClassIds;
+
+        public readonly Logger Log;
         private readonly SerialGenerator _serialGenerator;
-        public static Dictionary<Int32, ItemType> ItemTypeStorage;
 
         private ItemManager()
         {
-            _log = new Logger("ItemManager");
+            Log = new Logger("ItemManager");
 
             SerialGeneratorManager.Instance.GetGenerator(typeof (ItemRecord).Name, WorldObject.ItemIdMin,
                 WorldObject.ItemIdMax, ref _serialGenerator);
@@ -25,8 +31,13 @@ namespace Throne.World
 
         public void Load()
         {
-            ClientDatabaseReader.Read("itemtype.dat", out ItemTypeStorage);
-            _log.Status("Item information loaded.");
+            ClassDesc.Read(out ItemClassIds);
+            ItemAdd.Read(out ItemCompositionBonuses);
+            ClientDatabaseReader.Read("itemtype.dat", out Templates);
+
+            Templates.Values.With(t => t.GetCompositionBonuses());
+
+            Log.Status("Item templates loaded.");
         }
 
         public Item CreateItem(Character chr, Int32 type)
@@ -45,7 +56,9 @@ namespace Throne.World
 
             return item;
         }
-        public ItemRecord CreateItemRecord(CharacterRecord cRecord, Int32 type, Byte craftLevel, Byte firstSlot, Byte secondSlot, Item.Positions position)
+
+        public ItemRecord CreateItemRecord(CharacterRecord cRecord, Int32 type, Byte craftLevel, Byte firstSlot,
+            Byte secondSlot, Item.Positions position)
         {
             var record = new ItemRecord
             {
@@ -61,6 +74,7 @@ namespace Throne.World
 
             return record;
         }
+
         public ItemRecord CreateItemRecord(Int32 type)
         {
             var record = new ItemRecord

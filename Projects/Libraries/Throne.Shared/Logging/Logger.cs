@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using JetBrains.Annotations;
+using Throne.Framework.Network.Transmission;
 
 namespace Throne.Framework.Logging
 {
@@ -22,7 +24,7 @@ namespace Throne.Framework.Logging
             get { return _logFile; }
             set
             {
-                if (value != null)
+                if (value != null && LogManager.FileLogging)
                 {
                     string pathToFile = Path.GetDirectoryName(value);
 
@@ -106,6 +108,60 @@ namespace Throne.Framework.Logging
             Exception innerEx = ex.InnerException;
             if (innerEx != null)
                 LogManager.WriteLine(LogType.Exception, this, Environment.NewLine + ex.InnerException, args);
+        }
+
+        public void Packet(PacketTypes type, Byte[] data, Int32 start, Int32 count)
+        {
+            if (!LogManager.LogPackets) return;
+            if (start + count < data.Length) return;
+
+            var hexDump = new StringBuilder();
+            hexDump.Append(String.Format("Packet: ({0}) {1} Size = {2}\n" +
+                                         "+-----------------------------------------------------------------+\n" +
+                                         "|00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F |0123456789ABCDEF|\n" +
+                                         "|------------------------------------------------|----------------|\n",
+                (UInt16)type, type, count));
+
+            try
+            {
+                Int32 end = start + count;
+                for (Int32 i = start; i < end; i += 16)
+                {
+                    var text = new StringBuilder();
+                    var hex = new StringBuilder();
+                    hex.Append("|");
+
+                    for (Int32 j = 0; j < 16; j++)
+                    {
+                        if (j + i < end)
+                        {
+                            Byte val = data[j + i];
+                            hex.Append(data[j + i].ToString("X2"));
+                            hex.Append(" ");
+                            if (val >= 32 && val <= 127)
+                                text.Append((Char) val);
+                            else
+                                text.Append(".");
+                        }
+                        else
+                        {
+                            hex.Append("   ");
+                            text.Append(" ");
+                        }
+                    }
+                    hex.Append("|");
+                    hex.Append(text + "|");
+                    hex.Append('\n');
+                    hexDump.Append(hex);
+                }
+
+                hexDump.Append("+-----------------------------------------------------------------+");
+                LogManager.WriteLine(LogType.Packet, this, hexDump.ToString());
+            }
+            catch (Exception ex)
+            {
+                Exception(ex, "Error while dumping hex. {0}", ex.Message);
+            }
         }
 
         public void Progress(int current, int max)

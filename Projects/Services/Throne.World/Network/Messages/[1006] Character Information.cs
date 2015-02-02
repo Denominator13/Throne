@@ -31,7 +31,7 @@ namespace Throne.World.Network.Messages
         private readonly byte
             Level;
 
-        private readonly Role.Model
+        private readonly Model
             Model;
 
         private readonly uint
@@ -97,7 +97,7 @@ namespace Throne.World.Network.Messages
 
         public CharacterInformation(Character character) : base(0)
         {
-            TypeId = (short) PacketTypes.CharacterInformation;
+            TypeId = (short)PacketTypes.CharacterInformation;
 
             CharacterName = character.Name;
             if (character.Spouse != null)
@@ -110,6 +110,12 @@ namespace Throne.World.Network.Messages
             AncestorJob = character.AncestorJob;
             Money = character.Money;
             EMoney = character.EMoney;
+            HealthPoints = 9900;
+            ManaPoints = 1500;
+            Spirit = 300;
+            Vitality = 300;
+            Agility = 300;
+            Strength = 300;
         }
 
         protected override byte[] Build()

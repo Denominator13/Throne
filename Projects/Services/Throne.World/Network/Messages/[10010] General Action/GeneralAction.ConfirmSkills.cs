@@ -4,7 +4,7 @@
     {
         public void SendSkills()
         {
-            Character.User.Send(this);
+            Character.User.Send(Character.Magic.Skills.Stream.Join(this));
         }
     }
 }

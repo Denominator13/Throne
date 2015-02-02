@@ -15,6 +15,7 @@ namespace Throne.World.Database.Records.Implementations
             yield return new ItemMapping();
             yield return new ServerInfoMapping();
             yield return new MailMapping();
+            yield return new MagicMapping();
         }
     }
 }

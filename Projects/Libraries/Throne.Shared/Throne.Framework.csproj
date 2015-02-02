@@ -164,7 +164,6 @@
   <ItemGroup>
     <Compile Include="Collections\BooleanArray.cs" />
     <Compile Include="Collections\ObjectPool.cs" />
-    <Compile Include="Collections\ProducerConsumerCollectionBase.cs" />
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\CommandArgumentException.cs" />
     <Compile Include="Commands\CommandArguments.cs" />

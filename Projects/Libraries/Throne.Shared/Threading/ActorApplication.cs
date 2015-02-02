@@ -14,7 +14,7 @@ namespace Throne.Framework.Threading
     public abstract class ActorApplication<T> : SingletonActor<T>
         where T : ActorApplication<T>
     {
-        public const int UpdateDelay = 20000;
+        public const int UpdateDelay = 500;
 
         protected readonly ActorTimer _updateTimer;
         public Logger Log;

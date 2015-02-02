@@ -14,7 +14,8 @@ namespace Throne.Framework.Logging
         Status = 0x10,
         Exception = 0x20,
         NotImplemented = 0x40,
-        None = 0x80
+        Packet = 0x80,
+        None = 0x100
     }
 
     /// <summary>
@@ -98,19 +99,29 @@ namespace Throne.Framework.Logging
                             case LogType.NotImplemented:
                                 Console.ForegroundColor = ConsoleColor.DarkGray;
                                 break;
+                            case LogType.Packet:
+                                Console.ForegroundColor = ConsoleColor.Blue;
+                                break;
                         }
 
-                    if (source)
-                        Console.Write("[{0}]", source.Name);
-                    else if (level != LogType.None)
-                        Console.Write("[{0}]", level);
+                   
+                        if (source)
+                            Console.Write("[{0}]", source.Name);
+                        else if (level != LogType.None)
+                            Console.Write("[{0}]", level);
 
-                    Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.ForegroundColor = ConsoleColor.Gray;
 
-                    if (level != LogType.None)
-                        Console.Write(" ");
-
-                    Console.Write(format, args);
+                        if (level != LogType.None)
+                            Console.Write(" ");
+                    try
+                    {
+                        Console.Write(format, args);
+                    }
+                    catch (FormatException)
+                    {
+                        Console.Write(format);
+                    }
                 }
 
                 if (!source || !toFile || !FileLogging) return;
@@ -120,7 +131,14 @@ namespace Throne.Framework.Logging
                     file.Write(DateTime.Now + " ");
                     if (level != LogType.None)
                         file.Write("[{0}] - ", level);
-                    file.Write(format, args);
+                    try
+                    {
+                        file.Write(format, args);
+                    }
+                    catch (FormatException)
+                    {
+                        file.Write(format);
+                    }
                     file.Flush();
                 }
             }

@@ -14,6 +14,16 @@
             White = 9
         }
 
+        public enum EquipmentQuality
+        {
+            Fixed = 0,
+            Normal = 5,
+            Refined = 6,
+            Unique = 7,
+            Elite = 8,
+            Super = 9
+        }
+
         public enum ActiveEffect
         {
             None = 0,
@@ -24,7 +34,7 @@
             Shield = 203
         }
 
-        public enum Positions : byte
+        public enum Positions
         {
             Inventory = 0,
 

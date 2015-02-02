@@ -37,6 +37,7 @@ namespace Throne.World.Records
         public virtual String CreatorMacAddress { get; set; }
         public virtual IList<ItemRecord> ItemPayload { get; set; }
         public virtual IList<MailRecord> MailPayload { get; set; }
+        public virtual IList<MagicRecord> SkillPayload { get; set; } 
 
         public override void Update()
         {
@@ -90,6 +91,11 @@ namespace Throne.World.Records
 
             HasMany(r => r.MailPayload)
                 .KeyColumn("RecipientId")
+                .Inverse()
+                .Not.LazyLoad();
+
+            HasMany(r => r.SkillPayload)
+                .KeyColumn("OwnerId")
                 .Inverse()
                 .Not.LazyLoad();
         }

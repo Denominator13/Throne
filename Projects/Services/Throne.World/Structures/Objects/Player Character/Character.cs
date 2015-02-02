@@ -11,6 +11,7 @@ using Throne.World.Network.Messages;
 using Throne.World.Properties;
 using Throne.World.Records;
 using Throne.World.Sessions;
+using Throne.World.Structures.Battle;
 using Throne.World.Structures.Mail;
 using Throne.World.Structures.Objects.Actors;
 using Throne.World.Structures.Storage;
@@ -21,6 +22,7 @@ namespace Throne.World.Structures.Objects
     /// <summary> An in-game user controlled entity with an archetype. </summary>
     public sealed partial class Character : Role, IDisposableResource
     {
+        public static Type Type = typeof(Character);
         public readonly SemaphoreSlim InitializationSignal;
 
         /// <summary>
@@ -54,6 +56,8 @@ namespace Throne.World.Structures.Objects
 
             Inbox = new Inbox(Record.MailPayload.Select(mailRecord => new Mail.Mail(mailRecord)));
 
+            Magic.AddSkill(Record.SkillPayload.Select(skillRecord => new MagicSkill(skillRecord)).ToArray());
+
             _currentVisibleCharacters = new Dictionary<UInt32, Character>();
             _currentVisibleMapItems = new Dictionary<UInt32, Item>();
             _currentVisibleNpcs = new Dictionary<UInt32, Npc>();
@@ -74,11 +78,60 @@ namespace Throne.World.Structures.Objects
 
             ClearScreen();
             NpcSession.Clear();
+            Magic = null;
 
             Log.Info(StrRes.SMSG_LoggedOut);
         }
 
         public bool IsDisposed { get; private set; }
+
+        #region Sending
+
+        public void SendToLocal(WorldPacket packet = null, Boolean includeSelf = false)
+        {
+            if (!packet) packet = this;
+            if (includeSelf) User.Send(packet);
+
+            foreach (Character user in _currentVisibleCharacters.Values)
+                user.User.Send(packet);
+        }
+
+        public override void SpawnFor(WorldClient observer)
+        {
+            ExchangeSpawns(observer.Character);
+        }
+
+        public override void DespawnFor(WorldClient observer)
+        {
+            using (var pkt = new GeneralAction(ActionType.RemoveEntity, this))
+                observer.Send(pkt);
+        }
+
+        public void Send(WorldPacket packet)
+        {
+            User.Send(packet);
+        }
+
+        public override void Send(String msg)
+        {
+            User.Send(msg);
+        }
+
+        public override void ExchangeSpawns(Character with)
+        {
+            //TODO: goodwill suits
+
+            with.User.Send((RoleInfo) this);
+            User.Send((RoleInfo) with);
+        }
+
+
+        public static implicit operator RoleInfo(Character characterToSpawn)
+        {
+            return new RoleInfo(characterToSpawn);
+        }
+
+        #endregion
 
         public async void Initialize()
         {
@@ -130,72 +183,16 @@ namespace Throne.World.Structures.Objects
             return Name;
         }
 
-        #region Sending
-
-        public void SendToLocal(WorldPacket packet = null, Boolean includeSelf = false)
+        public void Teleport(Location to)
         {
-            if (!packet) packet = this;
-            if (includeSelf) User.Send(packet);
+            if (!to.Map)
+                throw new ArgumentException("The map does not exist.");
 
-            foreach (Character user in _currentVisibleCharacters.Values)
-                user.User.Send(packet);
+            using (GeneralAction pkt = new GeneralAction(ActionType.Teleport, this).Teleport(to))
+                User.Send(pkt);
+
+            ExitCurrentRegion();
+            EnterRegion(to);
         }
-
-        public override void SpawnFor(WorldClient observer)
-        {
-            ExchangeSpawns(observer.Character);
-        }
-
-        public override void DespawnFor(WorldClient observer)
-        {
-            using (var pkt = new GeneralAction(ActionType.RemoveEntity, this))
-                observer.Send(pkt);
-        }
-
-        public void Send(WorldPacket packet)
-        {
-            User.Send(packet);
-        }
-
-        public void ExchangeSpawns(Character with)
-        {
-            //TODO: goodwill suits
-
-            with.User.Send((RoleInfo) this);
-            User.Send((RoleInfo) with);
-        }
-
-        /// <summary>
-        ///     Sends this entity's spawn at the edge of the other character's screen, then sends a jump.
-        /// </summary>
-        /// <param name="with"></param>
-        /// <param name="jmp"></param>
-        /// <remarks>
-        ///     TODO:
-        ///     I'm clearly rushing here. My method for entering into screens gracefully is not proper.
-        ///     The position of this entity is relocated, causing other players to exchange invalid spawn info or
-        ///     to interact with the player at the old location.
-        /// </remarks>
-        public void ExchangeAerialSpawns(Character with, Jump jmp)
-        {
-            Position pos = Location.Position.GetPrevious();
-            Position otherPos = with.Location.Position;
-            int pDistance = otherPos - pos;
-            int gap = WorldServer.Configuration.World.PlayerScreenRange - pDistance;
-            Position fauxPos = otherPos.GetRelative(pos, gap);
-
-            Location.Position.Relocate(fauxPos);
-            ExchangeSpawns(with);
-            Location.Position.Restore();
-
-            with.User.Send(jmp.Info);
-        }
-
-        public static implicit operator RoleInfo(Character characterToSpawn)
-        {
-            return new RoleInfo(characterToSpawn);
-        }
-
-        #endregion
     }
 }

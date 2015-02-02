@@ -80,17 +80,16 @@ namespace Throne.World
                         EnvironmentColor = "White",
                         SpawnMapId = 1002,
                         SpawnPointX = 300,
-                        SpawnPointY = 278,
-                        Attributes = MapAttribute.PkField | MapAttribute.BoothEnable
+                        SpawnPointY = 278
                     };
                     newMap.Create();
 
-                    _static.TryAdd(mapId, new Map(newMap));
+                    _static.TryAdd(mapId, null);
                     added++;
 
                     Log.Progress(done, toDo);
                 }
-
+                _static.Clear();
                 Log.Info(StrRes.SMSG_MapBuildDone, added, toDo);
             }
         }

@@ -32,16 +32,16 @@ namespace Throne.Framework.Network.Handling
         {
             dynamic handler = GetHandler(typeId);
 
-            if (LogManager.LogPackets)
-                Log.Debug(
-                    "{0}\n{1}/{2}:{3}\t{4}\n{5}",
-                    client,
-                    typeId.ToString("X2", CultureInfo.InvariantCulture),
-                    typeId,
-                    ((PacketTypes)typeId),
-                    length,
-                    BitConverter.ToString(payload).Replace("-", " ").WordWrap(48)
-                    );
+                Log.Packet((PacketTypes) typeId, payload, 4, length - 4);
+                //Log.Debug(
+                //    "{0}\n{1}/{2}:{3}\t{4}\n{5}",
+                //    client,
+                //    typeId.ToString("X2", CultureInfo.InvariantCulture),
+                //    typeId,
+                //    ((PacketTypes)typeId),
+                //    length,
+                //    BitConverter.ToString(payload).Replace("-", " ").WordWrap(48)
+                //    );
 
             if (handler == null) return;
 

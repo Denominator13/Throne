@@ -2,7 +2,7 @@
 
 namespace Throne.World.Database.Client
 {
-    public interface IClientDatabase
+    public interface IClientDbRecord
     {
         Int32 Id { get; set; }
     }

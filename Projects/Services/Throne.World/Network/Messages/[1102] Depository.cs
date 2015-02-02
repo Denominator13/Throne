@@ -9,7 +9,7 @@ using Throne.World.Structures.Storage;
 namespace Throne.World.Network.Messages
 {
     [WorldPacketHandler(PacketTypes.Depository)]
-    public sealed class Depository : WorldPacket
+    public sealed class DepositoryInformation : WorldPacket
     {
         public enum DepositoryAction
         {
@@ -27,12 +27,12 @@ namespace Throne.World.Network.Messages
         private UInt32 _itemId;
 
 
-        public Depository(Byte[] array)
+        public DepositoryInformation(Byte[] array)
             : base(array)
         {
         }
 
-        public Depository(DepositoryType type, DepositoryId id, DepositoryAction action, Int32 size, params Item[] set)
+        public DepositoryInformation(DepositoryType type, DepositoryId id, DepositoryAction action, Int32 size, params Item[] set)
             : base(PacketTypes.Depository, 28 + set.Length*56 + 8)
         {
             if (set.Length > 17)

@@ -52,7 +52,7 @@ namespace Throne.World.Structures.Objects
 
         #endregion
 
-        #region Combat
+        #region Battle
 
         public Byte Level
         {

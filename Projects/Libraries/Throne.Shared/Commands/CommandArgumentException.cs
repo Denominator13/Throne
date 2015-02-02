@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace Throne.Framework.Commands
 {
     [Serializable]
-    public class CommandArgumentException : Exception
+    public class CommandArgumentException : ArgumentException
     {
         public CommandArgumentException()
         {

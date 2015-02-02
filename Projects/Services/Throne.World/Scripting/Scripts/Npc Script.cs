@@ -152,14 +152,6 @@ namespace Throne.World.Scripting.Scripts
 
         #region Dialog
 
-        /// <summary>
-        /// Default method for talking.
-        /// </summary>
-        /// <remarks>
-        /// The NPC doesn't shut up till it runs out of breath! 
-        /// (or until you zap it, with the middle finger of BZZZZT)
-        /// </remarks>
-        /// <returns></returns>
         protected virtual async Task Talk()
         {
             await Task.Yield();

@@ -69,7 +69,7 @@ namespace Throne.Framework.Commands
                 }
 
                 var permissions = command.RequestedPermissions;
-                if (sender != null && permissions != null && !permissions.Contains(typeof(ConsolePermission)) &&
+                if (sender != null && permissions != null && !permissions.Contains(typeof (ConsolePermission)) &&
                     !permissions.Any(sender.HasPermission))
                 {
                     sender.Respond("Command {0} requires permission {1}.".Interpolate(cmd, permissions));
@@ -79,7 +79,7 @@ namespace Throne.Framework.Commands
                 lock (_cmdLock)
                     command.Execute(arguments, sender);
             }
-            catch (CommandArgumentException ex)
+            catch (ArgumentException ex)
             {
                 sender.Respond("Argument error for command \"{0}\" : {1}".Interpolate(cmd, ex.Message));
             }

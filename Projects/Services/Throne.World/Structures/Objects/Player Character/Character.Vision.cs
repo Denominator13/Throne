@@ -20,14 +20,11 @@ namespace Throne.World.Structures.Objects
     /// </remarks>
     partial class Character
     {
-        private Dictionary<UInt32, Character> _currentVisibleCharacters;
-        private Dictionary<UInt32, Item> _currentVisibleMapItems; // using the item class for now
-        private Dictionary<UInt32, Npc> _currentVisibleNpcs;
-
         public void ClearScreen()
         {
             _currentVisibleCharacters.Clear();
             _currentVisibleMapItems.Clear();
+            _currentVisibleNpcs.Clear();
         }
 
         public Boolean CanSee(IWorldObject obj)
@@ -37,7 +34,7 @@ namespace Throne.World.Structures.Objects
                    _currentVisibleNpcs.ContainsKey(obj.ID);
         }
 
-        public void LookDown(Jump jmp)
+        public override void LookDown(Jump jmp)
         {
             Map map = Location.Map;
 
@@ -92,7 +89,7 @@ namespace Throne.World.Structures.Objects
             #endregion
         }
 
-        public void LookAround()
+        public override void LookAround()
         {
             Map map = Location.Map;
 
@@ -224,7 +221,7 @@ namespace Throne.World.Structures.Objects
         #endregion
 
         #region Characters
-        private void AddVisibleCharacter(Character chr, Boolean spawn = true)
+        internal void AddVisibleCharacter(Character chr, Boolean spawn = true)
         {
             if (spawn)
                 ExchangeSpawns(chr);
@@ -232,7 +229,7 @@ namespace Throne.World.Structures.Objects
             _currentVisibleCharacters[chr.ID] = chr;
         }
 
-        private void RemoveVisibleCharacter(Character chr, Boolean force = false)
+        internal void RemoveVisibleCharacter(Character chr, Boolean force = false)
         {
             if (force)
                 chr.DespawnFor(User);

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Throne.Framework;
 using Throne.Framework.Network.Transmission.Stream;
+using Throne.World.Database.Client;
 using Throne.World.Network;
 using Throne.World.Network.Messages;
 using Throne.World.Records;
@@ -13,17 +15,13 @@ namespace Throne.World.Structures.Objects
     {
         public readonly ItemRecord Record;
 
+        private ItemScript _script;
+
         public Item(ItemRecord record)
             : base(record.Guid)
         {
             Record = record;
         }
-
-        #region Scripting
-
-        //TODO: Move this to the item information class when implemented.
-
-        private ItemScript _script;
 
         public ItemScript Script
         {
@@ -35,8 +33,6 @@ namespace Throne.World.Structures.Objects
             }
         }
 
-        #endregion
-
         public UInt32 Guid
         {
             get { return Record.Guid; }
@@ -47,17 +43,54 @@ namespace Throne.World.Structures.Objects
             get { return Record.Owner; }
             set
             {
-                if (!value)
-                    Record.Owner.ItemPayload.Remove(Record);
+                if (Record.Owner)
+                    if (Record.Owner != value)
+                        Record.Owner.ItemPayload.Remove(Record);
+
                 Record.Owner = value;
                 Record.Update();
             }
         }
 
+
         public Int32 Type
         {
             get { return Record.Type; }
         }
+
+        public Int32 FusionType
+        {
+            get { return 50000; //fused with speed arrows for now ;D
+            }
+        }
+
+        public ItemTemplate Base
+        {
+            get
+            {
+                if (!ItemManager.Templates.ContainsKey(Type))
+                    throw new NotSupportedException(
+                        "Item Type {0} does not have a template.".Interpolate(Type));
+
+                return ItemManager.Templates[Type];
+            }
+        }
+
+        public ItemTemplate FusedItem
+        {
+            get
+            {
+                if (FusionType == 0)
+                    return null;
+
+                if (!ItemManager.Templates.ContainsKey(FusionType))
+                    throw new NotSupportedException(
+                        "Item {0}'s fused type ({1}) has no template.".Interpolate(Guid, FusionType));
+
+                return ItemManager.Templates[Type];
+            }
+        }
+
 
         public Positions Position
         {
@@ -82,11 +115,9 @@ namespace Throne.World.Structures.Objects
         public DepositoryId DepositoryId
         {
             get { return Record.DepositoryId; }
-            set
-            {
-                Record.DepositoryId = value;
-            }
+            set { Record.DepositoryId = value; }
         }
+
 
         public static Stream ToStream(IEnumerable<Item> toSend)
         {

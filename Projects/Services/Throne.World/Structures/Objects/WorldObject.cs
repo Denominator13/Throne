@@ -30,6 +30,10 @@ namespace Throne.World.Structures.Objects
 
         public virtual String Name { get; set; }
 
+        public virtual void Send(String msg) { }
+
+        public abstract Boolean Attackable();
+
 
         public Boolean IsPlayer
         {

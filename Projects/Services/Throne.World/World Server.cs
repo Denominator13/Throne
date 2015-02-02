@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Net;
 using Throne.Framework;
 using Throne.Framework.Cryptography;
@@ -13,8 +10,8 @@ using Throne.Framework.Services;
 using Throne.Framework.Services.Account;
 using Throne.Framework.Utilities;
 using Throne.World.Configuration;
-using Throne.World.Database.Client;
 using Throne.World.Database.Records.Implementations;
+using Throne.World.Managers;
 using Throne.World.Network;
 using Throne.World.Network.Handling;
 using Throne.World.Properties;
@@ -69,6 +66,7 @@ namespace Throne.World
             LinkAccountService();
 
             ItemManager.Instance.Load();
+            BattleManager.Instance.Load();
             ScriptManager.Instance.Load();
 
             Log.Status("Configuring TCP server on {0}.", EndPoint);

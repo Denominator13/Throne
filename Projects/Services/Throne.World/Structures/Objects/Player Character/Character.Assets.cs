@@ -224,7 +224,7 @@ namespace Throne.World.Structures.Objects
                 item.DepositoryId = id;
                 item.DepositoryType = type;
 
-                User.Send(new Depository(type, id, Depository.DepositoryAction.ShowItem, 1, item));
+                User.Send(new DepositoryInformation(type, id, DepositoryInformation.DepositoryAction.ShowItem, 1, item));
             }
         }
 

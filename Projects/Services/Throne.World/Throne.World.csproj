@@ -195,10 +195,15 @@
     <Compile Include="Configuration\Files\World.cs" />
     <Compile Include="Configuration\WorldConfiguration.cs" />
     <Compile Include="Database\Client\ClientDatabaseReader.cs" />
+    <Compile Include="Database\Client\Files\ClassDesc.cs" />
+    <Compile Include="Database\Client\Files\ItemAdd.cs" />
     <Compile Include="Database\Client\Files\ItemType.cs" />
-    <Compile Include="Database\Client\IClientDatabase.cs" />
+    <Compile Include="Database\Client\Files\MagicType.cs" />
+    <Compile Include="Database\Client\IClientDbRecord.cs" />
     <Compile Include="Database\Implementations\Conventions\Naming\WorldClassNamingConvention.cs" />
     <Compile Include="Database\Records\Mail Record.cs" />
+    <Compile Include="Database\Records\Magic Record.cs" />
+    <Compile Include="Managers\Battle Manager.cs" />
     <Compile Include="Managers\Character Manager.cs" />
     <Compile Include="Managers\Chat Manager.cs" />
     <Compile Include="Managers\Item Manager.cs" />
@@ -228,10 +233,13 @@
     <Compile Include="Network\Messages\[1009] Item Action\ItemAction.Unequip.cs" />
     <Compile Include="Network\Messages\[1009] Item Action\ItemAction.Use.cs" />
     <Compile Include="Network\Messages\[1016] Weather.cs" />
+    <Compile Include="Network\Messages\[1022] Interaction.cs" />
     <Compile Include="Network\Messages\[1032] Battle Effectiveness.cs" />
     <Compile Include="Network\Messages\[1043] Item Roll.cs" />
     <Compile Include="Network\Messages\[1101] Map Item Info.cs" />
     <Compile Include="Network\Messages\[1102] Depository.cs" />
+    <Compile Include="Network\Messages\[1103] Skill Information.cs" />
+    <Compile Include="Network\Messages\[1105] Skill Effect.cs" />
     <Compile Include="Network\Messages\[1129] VIP Valid Functions.cs" />
     <Compile Include="Network\Messages\[2030] NPC Information.cs" />
     <Compile Include="Network\Messages\[2031] NPC Action.cs" />
@@ -292,14 +300,31 @@
     <Compile Include="Security\Security Violation EventArgs.cs" />
     <Compile Include="Security\Security Violation Exception.cs" />
     <Compile Include="Sessions\NpcSession.cs" />
+    <Compile Include="Structures\Battle\MagicSkill.cs" />
+    <Compile Include="Structures\Battle\BattleInteraction.cs" />
+    <Compile Include="Structures\Battle\Magic\Magic.cs" />
+    <Compile Include="Structures\Battle\Magic\Magic.Enumerators.cs" />
+    <Compile Include="Structures\Battle\Magic\Magic.Fields.cs" />
+    <Compile Include="Structures\Battle\Magic\Magic.Perform.cs" />
+    <Compile Include="Structures\Battle\Magic\Targeting\TargetingCollection.cs" />
+    <Compile Include="Structures\Battle\Magic\Targeting\TargetCollector.cs" />
+    <Compile Include="Structures\Battle\Magic\Targeting\TargetFilter.cs" />
+    <Compile Include="Structures\Battle\Magic\Targeting\TargetEvaluation.cs" />
     <Compile Include="Structures\Mail\Inbox.cs" />
     <Compile Include="Structures\Mail\Mail.cs" />
     <Compile Include="Structures\Mail\Writer.cs" />
     <Compile Include="Structures\Objects\Item\Item.Attributes.cs" />
-    <Compile Include="Structures\Objects\Role.Enumerators.cs" />
+    <Compile Include="Structures\Objects\Player Character\Character.Battle.cs" />
+    <Compile Include="Structures\Objects\Role\Hair.cs" />
+    <Compile Include="Structures\Objects\Role\Model.cs" />
+    <Compile Include="Structures\Objects\Role\Role.Enumerators.cs" />
+    <Compile Include="Structures\Objects\Role\Role.Vision.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Structures\Storage\Item Storage Implementations\Depository.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Structures\Storage\Skill Storage.cs" />
     <Compile Include="Structures\Task Dialog\Dialog.cs" />
     <Compile Include="Structures\Task Dialog\DialogFeedback.cs" />
     <Compile Include="Structures\Task Dialog\DialogInput.cs" />
@@ -312,7 +337,7 @@
     <Compile Include="Structures\Objects\Item\Item.Enumerators.cs" />
     <Compile Include="Structures\Objects\Item\Item.Composition.cs" />
     <Compile Include="Structures\Gear\Gear Slot.cs" />
-    <Compile Include="Structures\Objects\Role.cs" />
+    <Compile Include="Structures\Objects\Role\Role.cs" />
     <Compile Include="Structures\Objects\Player Character\Character.Assets.cs" />
     <Compile Include="Structures\Storage\Item Storage Implementations\Inventory.cs" />
     <Compile Include="Structures\Storage\Item Storage.cs" />
@@ -380,7 +405,10 @@
       <Name>Throne.Framework</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Structures\Battle\Effects\" />
+    <Folder Include="Structures\Battle\Melee\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

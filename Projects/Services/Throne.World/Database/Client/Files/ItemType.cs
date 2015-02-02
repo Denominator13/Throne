@@ -1,27 +1,49 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using Throne.World.Database.Client.Files;
 using Throne.World.Structures.Objects;
 
 namespace Throne.World.Database.Client
 {
     [StructLayout(LayoutKind.Sequential)]
-    public class ItemType : IClientDatabase
+    public class ItemTemplate : IClientDbRecord
     {
-        public int Id { get; set; }
+        public Int32 Id { get; set; }
+        public List<ItemCompositionBonus> CompositionBonuses { get; private set; }
+        public Dictionary<Byte, ItemTemplate> RelativeItemTemplates { get; private set; }
 
-        public String Name;
-        public Role.Profession RequiredProfession;
-        public Int32 RequiredWeaponSkill;
-        public Byte RequiredLevel;
-        public Role.Model.SexType RequiredSex;
+        public ItemTemplate()
+        {
+            RelativeItemTemplates = new Dictionary<Byte, ItemTemplate>();
+        }
 
-        public UInt16
+        public void GetCompositionBonuses()
+        {
+            ItemCompositionBonus data;
+            if (ItemManager.ItemCompositionBonuses.TryGetValue(
+                Id/100000 == 4 || Id/100000 == 5 // Math by BaussHacker
+                    ? (Id/100000)*111000 + (Id/10*10%1000)
+                    : Id/10*10,
+                out data))
+                CompositionBonuses = data.Levels;
+        }
+
+        public readonly String Name;
+        public readonly Role.Profession RequiredProfession;
+        public readonly Int32 RequiredWeaponSkill;
+        public readonly Byte RequiredLevel;
+        public readonly Model.SexType RequiredSex;
+
+
+
+        public readonly UInt16
             RequiredStrength,
             RequiredAgility,
             RequiredVitality,
             RequiredSpirit;
 
-        public Int32
+        public readonly Int32
             Monopoly,
             Weight,
             MoneyPrice,
@@ -66,13 +88,27 @@ namespace Throne.World.Database.Client
             Fire,
             Earth;
 
-        public String TypeDescription, Description;
+        public readonly String TypeDescription, Description;
 
-        public Item.Color ColorIndex;
+        public readonly Int32 NameColor;
 
-        public Byte SoulLevel;
+        public readonly Byte SoulLevel;
 
-        public Int32 MeteorCount, RecoverEnergy, AuctionClass, AuctionDeposit;
+        public readonly Int32 MeteorCount, RecoverEnergy, ItemClass, AuctionDeposit;
+
+        public Int32 Type
+        {
+            get { return Id/1000; }
+        }
+
+        public Boolean IsEquipment
+        {
+            get
+            {
+                return ItemClass >= ItemManager.ItemClassIds["Weapon"] &&
+                       ItemClass <= ItemManager.ItemClassIds["Garment/Accessory"];
+            }
+        }
 
         public override string ToString()
         {

@@ -18,6 +18,11 @@ namespace Throne.World.Structures.Objects.Actors
             Look = new Model(1, Orientation.Northeast);
         }
 
+        public override bool Attackable()
+        {
+            return true;
+        }
+
         public override void SpawnFor(WorldClient observer)
         {
             using (WorldPacket pkt = this)

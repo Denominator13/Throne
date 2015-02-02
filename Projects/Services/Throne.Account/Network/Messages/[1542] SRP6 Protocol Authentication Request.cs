@@ -2,7 +2,6 @@
 using Throne.Framework.Network.Transmission;
 using Throne.Login.Accounts;
 using Throne.Login.Network.Handling;
-using Throne.Login.Properties;
 using Throne.Login.Records;
 
 namespace Throne.Login.Network.Messages
@@ -64,7 +63,7 @@ namespace Throne.Login.Network.Messages
 
                     using (
                         var packet = new AuthenticationAction(userRecord.Guid, userRecord.Password.GetHashCode(),
-                           LoginServer.Configuration.Network.GamePort, LoginServer.Configuration.Network.GameIP))
+                            LoginServer.Configuration.Network.GamePort, LoginServer.Configuration.Network.GameIP))
                         client.Send(packet);
                 }
                 else

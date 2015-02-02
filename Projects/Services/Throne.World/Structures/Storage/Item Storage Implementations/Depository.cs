@@ -60,14 +60,14 @@ namespace Throne.World.Structures.Storage
                         Items.Skip(joined).Take(17).ToArray().With(
                             items =>
                             {
-                                stream.Join(new Depository(type, id, Depository.DepositoryAction.Initiate, Size,
+                                stream.Join(new DepositoryInformation(type, id, DepositoryInformation.DepositoryAction.Initiate, Size,
                                     items));
                                 joined += items.Length;
                             });
                     return stream;
                 }
                 else
-                    return new Depository(type, id, Depository.DepositoryAction.Initiate, Size, Items.ToArray());
+                    return new DepositoryInformation(type, id, DepositoryInformation.DepositoryAction.Initiate, Size, Items.ToArray());
         }
     }
 

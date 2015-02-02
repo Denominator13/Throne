@@ -1,5 +1,4 @@
 ﻿using Throne.Framework.Commands;
-using Throne.World.Network.Messages;
 using Throne.World.Structures.Travel;
 
 namespace Throne.World.Commands.User.Travel
@@ -14,15 +13,11 @@ namespace Throne.World.Commands.User.Travel
 
         public override void ExecuteUserCommand()
         {
-            var map = Arguments.NextUInt32();
-            var x = Arguments.NextInt16();
-            var y = Arguments.NextInt16();
+            uint map = Arguments.NextUInt32();
+            short x = Arguments.NextInt16();
+            short y = Arguments.NextInt16();
             var dst = new Location(map, x, y);
-
-            using (var pkt = new GeneralAction(ActionType.Teleport, Target).Teleport(dst))
-                Target.User.Send(pkt);
-
-            Target.EnterRegion(dst);
+            Target.Teleport(dst);
         }
     }
 }
