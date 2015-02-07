@@ -1,6 +1,7 @@
 ﻿using System;
 using Throne.Framework;
 using Throne.World.Security;
+using Throne.World.Structures.Objects;
 
 namespace Throne.World.Structures.Battle
 {
@@ -30,18 +31,20 @@ namespace Throne.World.Structures.Battle
         {
             State = CastState.Targeting;
             CurrentSkill.Template.TargetCollector.Invoke(this);
+
+            if (Targets.Count == 0)
+                throw new BattleInteractionException("Could not find a target.");
+
+            Caster.Send("Targeted {0}".Interpolate(string.Join(",", Targets)));
         }
 
         private void Perform()
         {
-            if (Targets.Count == 0)
-                return;
-
-            Caster.Send("Targeted {0}".Interpolate(string.Join(",", Targets)));
-
             State = CastState.Performing;
 
-            ///TODO: send target lists
+            var chr = Caster as Character;
+            if (chr)
+                chr.SendToLocal(Targets, true);
 
             //channel if the skill is channeled
             //calculate damage
