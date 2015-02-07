@@ -21,7 +21,7 @@ namespace Throne.World.Structures.Battle.Targeting
             _filters = filters;
         }
 
-        public CollectorResult Invoke(Magic magic)
+        public void Invoke(Magic magic)
         {
             var result = CollectorResult.Success;
 
@@ -33,8 +33,6 @@ namespace Throne.World.Structures.Battle.Targeting
 
             foreach (TargetFilter filter in _filters)
                 filter.Invoke(magic);
-
-            return result;
         }
 
         private IEnumerable<TargetCollector> EnumToCollectors(CollectorType collectors)

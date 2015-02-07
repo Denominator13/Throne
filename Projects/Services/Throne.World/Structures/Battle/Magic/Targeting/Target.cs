@@ -55,5 +55,10 @@ namespace Throne.World.Structures.Battle.Targeting
         {
             return tgt.Object.Attackable();
         }
+
+        public override string ToString()
+        {
+            return Object.ToString();
+        }
     }
 }
