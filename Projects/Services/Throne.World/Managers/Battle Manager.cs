@@ -35,8 +35,7 @@ namespace Throne.World.Managers
                 switch (template.Sort)
                 {
                     case MagicSort.SingleTarget:
-                        template.TargetCollector =
-                        new TargetCollector(TargetCollector.Explicit).AddFilters(new AttackableFilter());
+                        template.TargetCollector = new TargetCollection(CollectorType.Explicit, new AttackableFilter());
                         break;
                 }
             });

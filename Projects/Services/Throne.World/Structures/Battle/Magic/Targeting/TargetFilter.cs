@@ -2,7 +2,7 @@
 {
     public abstract class TargetFilter
     {
-        public abstract void Invoke(BattleInteraction usage, ref TargetingCollection targets);
+        public abstract void Invoke(Magic magic);
     }
 
     /// <summary>
@@ -10,9 +10,20 @@
     /// </summary>
     public class AttackableFilter : TargetFilter
     {
-        public override void Invoke(BattleInteraction usage, ref TargetingCollection targets)
+        public override void Invoke(Magic magic)
         {
-            targets.RemoveAll(t => !t.Attackable());
+            magic.Targets.RemoveAll(t => !t);
+        }
+    }
+
+    /// <summary>
+    ///     Removes any non-player targets.
+    /// </summary>
+    public class NonPlayerFilter : TargetFilter
+    {
+        public override void Invoke(Magic magic)
+        {
+            magic.Targets.RemoveAll(t => !t.Object.IsPlayer);
         }
     }
 }

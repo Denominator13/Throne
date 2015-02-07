@@ -1,62 +1,94 @@
-﻿using Throne.World.Database.Client.Files;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Throne.World.Structures.Battle.Targeting.Filters;
 using Throne.World.Structures.Objects;
 
 namespace Throne.World.Structures.Battle.Targeting
 {
-    public class TargetCollector
+    /// <summary>
+    ///     <see cref="TargetCollector"/>s gather their results into a <seealso cref="TargetList" />.
+    ///     After targets are gathered, all are filtered based on given <seealso cref="TargetFilter" /> constraints.
+    /// </summary>
+    public class TargetCollection
     {
-        public delegate void Collector(
-            TargetingCollection targeting, ref CollectorResult result);
+        private readonly TargetCollector[] _collectors;
+        private readonly TargetFilter[] _filters;
 
-        public readonly Collector[] Collectors;
-        public TargetFilter[] Filters;
-
-        public TargetCollector(params Collector[] collectors)
+        public TargetCollection(CollectorType collectors, params TargetFilter[] filters)
         {
-            Collectors = collectors;
+            _collectors = EnumToCollectors(collectors).ToArray();
+            _filters = filters;
         }
 
-        public TargetCollector AddFilters(params TargetFilter[] filters)
+        public CollectorResult Invoke(Magic magic)
         {
-            Filters = filters;
-            return this;
+            var result = CollectorResult.Success;
+
+            foreach (TargetCollector collector in _collectors)
+            {
+                if (result < CollectorResult.Success) break;
+                collector(magic, ref result);
+            }
+
+            foreach (TargetFilter filter in _filters)
+                filter.Invoke(magic);
+
+            return result;
         }
 
-        public static void Self(TargetingCollection targeting, ref CollectorResult result)
+        private IEnumerable<TargetCollector> EnumToCollectors(CollectorType collectors)
         {
-            BattleInteraction usage = targeting.Usage;
-
-            targeting.Add(targeting.Caster);
-
-            foreach (var targetFilter in targeting.Skill.Template.TargetCollector.Filters)
-                targetFilter.Invoke(usage, ref targeting);
-
-            result = CollectorResult.Success;
+            foreach (CollectorType t in Enum.GetValues(collectors.GetType())
+                .Cast<CollectorType>()
+                .Where(target => collectors.HasFlag(target)))
+                switch (t)
+                {
+                    case CollectorType.Explicit:
+                        yield return Explicit;
+                        break;
+                    case CollectorType.Self:
+                        yield return Self;
+                        break;
+                }
         }
 
-        public static void Explicit(TargetingCollection targeting, ref CollectorResult result)
+        private static void Self(Magic magic, ref CollectorResult result)
         {
-            BattleInteraction usage = targeting.Usage;
-            Role caster = targeting.Caster;
+            magic.Targets.Add(new Target(magic.Caster));
+        }
+
+        private static void Explicit(Magic magic, ref CollectorResult result)
+        {
+            BattleInteraction usage = magic.Usage;
+            Role caster = magic.Caster;
 
             WorldObject explicitTarget;
             caster.GetVisibleObject(usage.Target, out explicitTarget);
 
             if (explicitTarget)
-                targeting.Add(explicitTarget);
-            else return;
-
-            foreach (var targetFilter in targeting.Skill.Template.TargetCollector.Filters)
-                targetFilter.Invoke(usage, ref targeting);
-
-            result = CollectorResult.Success;
+                magic.Targets.Add(new Target(explicitTarget));
+            else
+                result = CollectorResult.TargetDoesNotExist;
         }
+
+        private delegate void TargetCollector(Magic magic, ref CollectorResult result);
     }
 
     public enum CollectorResult : byte
     {
-        Failed,
+        TargetDoesNotExist,
+
+
+        /// <summary> The lowest success value. </summary>
         Success
+    }
+
+    [Flags]
+    public enum CollectorType
+    {
+        None,
+        Self,
+        Explicit
     }
 }

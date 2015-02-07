@@ -89,12 +89,20 @@ namespace Throne.World.Network.Messages
 
         public override void Handle(WorldClient client)
         {
-            switch (Type)
+            try
             {
-                case InteractType.Magic:
-                    client.Character.Magic.Execute(new BattleInteraction(SkillId, SkillLevel, ObjectId, TargetObjectId,
-                        new Position((short) PositionX, (short) PositionY)));
-                    break;
+                switch (Type)
+                {
+                    case InteractType.Magic:
+                        client.Character.Magic.Execute(new BattleInteraction(SkillId, SkillLevel, ObjectId,
+                            TargetObjectId,
+                            new Position((short) PositionX, (short) PositionY)));
+                        break;
+                }
+            }
+            catch (BattleInteractionException ex)
+            {
+                client.Send(ex.Message);
             }
         }
 

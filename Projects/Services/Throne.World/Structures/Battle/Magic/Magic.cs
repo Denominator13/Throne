@@ -26,9 +26,8 @@ namespace Throne.World.Structures.Battle
 
         private Magic()
         {
-            Effects = new BooleanArray<ResponseEffect>(4);
             Skills = new SkillStorage();
-            Targeting = new TargetingCollection();
+            Targets = new TargetList(this);
         }
 
         public void Dispose()
@@ -46,18 +45,29 @@ namespace Throne.World.Structures.Battle
         public void Cleanup()
         {
             State = CastState.Finished;
-            MagicSkill = null;
-            Effects.SetAll(false);
-            Targeting.Clear();
+            CurrentSkill = null;
+            Targets.Clear();
         }
 
         public void Execute(BattleInteraction usage)
         {
             Usage = usage;
-            if (!CanPerform()) return;
-            if (!PrePerform()) return;
 
-            Perform();
+            try
+            {
+                Initialize();
+                Performable();
+                Targeting();
+                Perform();
+            }
+            catch (BattleInteractionException ex)
+            {
+                Caster.Send(ex.Message);
+            }
+            catch (Exception ex) //Catch all exceptions to prevent failure to clean up.
+            {
+                BattleManager.Instance.Log.Exception(ex, "Exception caught for {0} ({1})", Caster, ex.Message);
+            }
 
             Cleanup();
         }

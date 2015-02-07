@@ -81,5 +81,10 @@ namespace Throne.World.Structures.Battle
         {
             return new SkillInformation(skill);
         }
+
+        public override string ToString()
+        {
+            return _template.Name;
+        }
     }
 }

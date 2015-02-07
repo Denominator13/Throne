@@ -65,7 +65,7 @@ namespace Throne.World.Network.Messages
             Look = npc.Look;
             X = npc.Location.Position.X;
             Y = npc.Location.Position.Y;
-            DisplayName = npc.DisplayName;
+            DisplayName = npc.Name;
         }
 
         protected override byte[] Build()

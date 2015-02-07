@@ -37,7 +37,7 @@ namespace Throne.World.Database.Client.Files
             get { return (Single) Power%10000/100; }
         }
 
-        public TargetCollector TargetCollector { get; set; }
+        public TargetCollection TargetCollector { get; set; }
 
         public override string ToString()
         {

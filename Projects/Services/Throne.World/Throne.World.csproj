@@ -302,11 +302,13 @@
     <Compile Include="Sessions\NpcSession.cs" />
     <Compile Include="Structures\Battle\MagicSkill.cs" />
     <Compile Include="Structures\Battle\BattleInteraction.cs" />
+    <Compile Include="Structures\Battle\BattleInteractionException.cs" />
     <Compile Include="Structures\Battle\Magic\Magic.cs" />
     <Compile Include="Structures\Battle\Magic\Magic.Enumerators.cs" />
     <Compile Include="Structures\Battle\Magic\Magic.Fields.cs" />
     <Compile Include="Structures\Battle\Magic\Magic.Perform.cs" />
-    <Compile Include="Structures\Battle\Magic\Targeting\TargetingCollection.cs" />
+    <Compile Include="Structures\Battle\Magic\Targeting\Target.cs" />
+    <Compile Include="Structures\Battle\Magic\Targeting\TargetList.cs" />
     <Compile Include="Structures\Battle\Magic\Targeting\TargetCollector.cs" />
     <Compile Include="Structures\Battle\Magic\Targeting\TargetFilter.cs" />
     <Compile Include="Structures\Battle\Magic\Targeting\TargetEvaluation.cs" />

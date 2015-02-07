@@ -6,12 +6,23 @@ namespace Throne.World.Structures.Battle
     {
         public enum CastState
         {
-            Finished,
             Preparing,
+            Ready,
             Targeting,
-            Focusing, //intensify, spirit focus, inferno
-            Channeling, // pervade
-            Performing
+            /// <summary>
+            ///  intensify, spirit focus, inferno
+            /// </summary>
+            Focusing,
+            /// <summary>
+            /// pervade
+            /// </summary>
+            Channeling,
+            Performing,
+            Finished,
+            
+            NotEnoughMana,
+            NotEnoughStamina,
+            NotEnoughSpecial
         }
 
         [Flags]

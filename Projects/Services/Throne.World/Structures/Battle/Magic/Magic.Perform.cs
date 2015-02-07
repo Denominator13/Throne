@@ -1,41 +1,49 @@
 ﻿using System;
+using Throne.Framework;
 using Throne.World.Security;
 
 namespace Throne.World.Structures.Battle
 {
     public partial class Magic
     {
-        private Boolean PrePerform()
+        private void Initialize()
         {
             if (State == CastState.Focusing)
                 throw new NotImplementedException("TODO: Focused skill not yet cancelled.");
 
             State = CastState.Preparing;
-
-            MagicSkill = Skills[Usage.Type];
-            if (MagicSkill == null)
+            CurrentSkill = Skills[Usage.Type];
+            if (CurrentSkill == null)
                 throw new ModerateViolation("Used unattained skill {0}.", Usage.Type);
-            if (MagicSkill.Level != Usage.Level)
+            if (CurrentSkill.Level != Usage.Level)
                 throw new MildViolation("Used unattained skill level {0} (highest: {1})", Usage.Level,
-                    MagicSkill.Level);
-
-            State = CastState.Targeting;
-            Targeting.Collect();
-
-            return true;
+                    CurrentSkill.Level);
         }
 
-        private Boolean CanPerform()
+        private void Performable()
         {
-            return true;
+            // todo if (mana < neededMana) throw new BattleInteractionException("You do not have enough mana.");
+            State = CastState.Ready;
+        }
+
+        private void Targeting()
+        {
+            State = CastState.Targeting;
+            CurrentSkill.Template.TargetCollector.Invoke(this);
         }
 
         private void Perform()
         {
-            if (Targeting.Count < 1)
+            if (Targets.Count == 0)
                 return;
 
+            Caster.Send("Targeted {0}".Interpolate(string.Join(",", Targets)));
+
             State = CastState.Performing;
+
+            ///TODO: send target lists
+
+            //channel if the skill is channeled
             //calculate damage
             //deal damage
             //send usage and effect

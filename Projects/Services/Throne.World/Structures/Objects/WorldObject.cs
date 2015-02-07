@@ -83,5 +83,10 @@ namespace Throne.World.Structures.Objects
         {
             return obj != null;
         }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

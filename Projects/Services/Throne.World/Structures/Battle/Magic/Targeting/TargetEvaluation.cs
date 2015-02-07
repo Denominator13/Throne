@@ -13,9 +13,10 @@ namespace Throne.World.Structures.Battle.Targeting
     /// </summary>
     public class NearestTargetEvaluator : TargetEvaluation
     {
-        public override void Invoke(BattleInteraction usage, ref TargetingCollection targets)
+        public override void Invoke(Magic magic)
         {
-            targets.Sort((a, b) => Distance(usage, a).CompareTo(Distance(usage, b)));
+            var usage = magic.Usage;
+            magic.Targets.Sort((a, b) => Distance(usage, a).CompareTo(Distance(usage, b)));
         }
 
         private static Int32 Distance(BattleInteraction usage, IWorldObject target)

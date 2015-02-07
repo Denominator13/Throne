@@ -55,7 +55,7 @@ namespace Throne.World.Scripting.Scripts
             Npc.Script = this;
 
             if (!Npc.Location.Map)
-                Log.Error("{0}/{1} could not be spawned.", Npc.LongName, Npc.DisplayName);
+                Log.Error("{0}/{1} could not be spawned.", Npc.Name, Npc.LongName);
             else
                 Npc.SpawnAtLocation();
 
@@ -140,7 +140,7 @@ namespace Throne.World.Scripting.Scripts
 
         protected void SetDisplayName(String name)
         {
-            Npc.DisplayName = name;
+            Npc.Name = name;
         }
 
         protected void SetType(NpcInformation.Types type)
